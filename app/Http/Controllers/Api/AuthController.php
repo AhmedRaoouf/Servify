@@ -149,9 +149,17 @@ class AuthController extends Controller
             return response()->json(['message' => 'New password must be different from the previous password'], 422);
         }
 
+        $passwordHistory = $user->password_history;
+
+        if (in_array(Hash::make($request->password), $passwordHistory)) {
+            return response()->json(['message' => 'You cannot reuse the same password'], 422);
+        }
+
+        // Update the password and password history
         $user->update([
             'password' => Hash::make($request->password),
             'otp' => null,
+            'password_history' => array_merge([$user->password], $passwordHistory),
         ]);
 
         return response()->json(['message' => 'Password changed successfully']);
