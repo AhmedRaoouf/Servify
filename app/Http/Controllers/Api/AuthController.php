@@ -129,7 +129,7 @@ class AuthController extends Controller
         return response()->json($response);
     }
 
-    function reset(Request $request, $otp)
+    public function reset(Request $request, $otp)
     {
         $validator = Validator::make($request->all(), [
             "password"  => ["required", "string", "min:8", "max:50", "confirmed"],
@@ -144,6 +144,11 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['message' => 'OTP is not correct'], 404);
         }
+
+        if (Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'New password must be different from the previous password'], 422);
+        }
+
         $user->update([
             'password' => Hash::make($request->password),
             'otp' => null,
@@ -151,6 +156,7 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Password changed successfully']);
     }
+
 
     public function sendVerificationLink(Request $request)
     {
