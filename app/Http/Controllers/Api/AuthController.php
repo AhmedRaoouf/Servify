@@ -157,7 +157,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Password changed successfully']);
     }
 
-
     public function sendVerificationCode(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -192,9 +191,13 @@ class AuthController extends Controller
                 'status'  => true,
                 'message' => 'Verification Code sent successfully.',
             ]);
+        }else{
+            return response()->json([
+                'status'  => false,
+                'message' => 'Email is already verified'
+            ], 400);
         }
     }
-
 
     public function verify($code)
 {
@@ -205,13 +208,6 @@ class AuthController extends Controller
             'status'  => false,
             'message' => 'Verification code is not correct'
         ], 404);
-    }
-
-    if ($user->email_verified_at !== null) {
-        return response()->json([
-            'status'  => false,
-            'message' => 'Email is already verified'
-        ], 400);
     }
 
     $user->update([
