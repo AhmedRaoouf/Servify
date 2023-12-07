@@ -16,10 +16,10 @@ class ActiveMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public $verificationCode;
-    public function __construct($verificationCode)
+    public $code;
+    public function __construct($code)
     {
-        $this->verificationCode = $verificationCode;
+        $this->code = $code;
     }
 
     /**

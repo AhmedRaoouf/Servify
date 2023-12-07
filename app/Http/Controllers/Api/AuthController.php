@@ -171,11 +171,12 @@ class AuthController extends Controller
     }
 
     $user = User::where('email', $request->input('email'))->first();
-
+    dd($user);
     if (!$user->hasVerifiedEmail()) {
         $code = random_int(1000, 9999);
+
         $user->update([
-            'verification_code' => $code,  // Removed extra space
+            'verification_code' => $code,
         ]);
 
         try {
@@ -189,7 +190,6 @@ class AuthController extends Controller
             ], 500);
         }
 
-        // This block is unreachable, you might want to remove it
         return response()->json([
             'status'  => true,
             'message' => 'Verification Code sent successfully.',

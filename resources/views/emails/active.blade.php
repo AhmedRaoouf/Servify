@@ -52,7 +52,7 @@
         <p>
             Thank you for registering with us. To complete your registration, please use the verification code below:
         </p>
-        <div class="verification-code">{{ $verificationCode }}</div>
+        <div class="verification-code">{{ $code }}</div>
         <p class="note">
             Note: This verification code is valid for a limited time. Please do not share it with anyone for security reasons.
         </p>
