@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('password');
             $table->string('token',64)->nullable();
             $table->smallInteger('otp')->nullable();
+            $table->smallInteger('verification_code')->nullable();
+            $table->integer('google_id')->nullable();
+            $table->integer('facebook_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

@@ -25,7 +25,7 @@ Route::middleware(['api_auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::post('/email/verify', [AuthController::class,'sendVerificationLink']);
-Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('verification.verify');
+Route::post('/send-verification-code', [AuthController::class,'sendVerificationCode']);
+Route::post('/verify-email/{code}', [AuthController::class,'verify']);
 
 

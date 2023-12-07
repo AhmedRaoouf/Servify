@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequet;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
+use App\Mail\ActiveMail;
 use App\Mail\ForgetPasswordMail;
 use App\Models\Role;
 use App\Models\User;
@@ -34,8 +35,6 @@ class AuthController extends Controller
             'image'    => $imageName,
             'role_id'  => Role::where('name', 'user')->value('id'),
         ]);
-        // Send email verification notification
-        $user->sendEmailVerificationNotification();
 
         return response()->json([
             "status"  => true,
@@ -159,49 +158,67 @@ class AuthController extends Controller
     }
 
 
-    public function sendVerificationLink(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-        ]);
+    public function sendVerificationCode(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email|exists:users,email',
+    ]);
 
-        $user = User::where('email', $request->input('email'))->first();
-        if (!$user) {
-            return response()->json([
-                'status'  => false,
-                'message' => 'User not found.',
-            ], 404);
-        }
-
-        if (!$user->hasVerifiedEmail()) {
-            $user->sendEmailVerificationNotification();
-
-            return response()->json([
-                'status'  => true,
-                'message' => 'Verification link sent successfully.',
-            ]);
-        }
-
+    if ($validator->fails()) {
         return response()->json([
-            'status'  => false,
-            'message' => 'Email is already verified.',
-        ]);
+            'errors' => $validator->errors()->all(),
+        ], 422);
     }
 
+    $user = User::where('email', $request->input('email'))->first();
 
-    public function verify(Request $request, $id, $hash)
-    {
-        $user = User::find($id);
+    if (!$user->hasVerifiedEmail()) {
+        $code = random_int(1000, 9999);
+        $user->update([
+            'verification_code' => $code,  // Removed extra space
+        ]);
 
-        if ($user && hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-            if (!$user->hasVerifiedEmail()) {
-                $user->markEmailAsVerified();
-                event(new Verified($user));
-            }
-
-            return redirect()->to('/'); // Redirect to your desired location after verification
+        try {
+            Mail::to($request->email)->send(new ActiveMail($user->verification_code));
+            return response()->json([
+                'message' => 'verification code sent successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
         }
 
-        abort(404); // You can customize this response as needed
+        // This block is unreachable, you might want to remove it
+        return response()->json([
+            'status'  => true,
+            'message' => 'Verification Code sent successfully.',
+        ]);
     }
+}
+
+
+    public function verify(Request $request,$code)
+    {
+        $validator = Validator::make($request->all(), [
+            "verificationCode"  => ["required", "exists:users,verification_code"],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $user = User::where('verification_code', $code)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'verification code is not correct'], 404);
+        }
+
+        $user->update(['verification_code' => null,]);
+
+        return response()->json(['message' => 'Email activated successfully']);
+    }
+
+
+
 }
