@@ -176,7 +176,7 @@ class AuthController extends Controller
 
             $user->verification_code = $code;
             $user->save();
-
+            
             try {
                 Mail::to($request->email)->send(new ActiveMail($user->verification_code));
                 return response()->json([
