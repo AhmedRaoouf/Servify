@@ -50,7 +50,8 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = Str::random(64);
-            $user->update(['token' => $token]);
+            $user->token = $token;
+            $user->save();
             $cookie = cookie('auth_token', $token, 60 * 24 * 30);
             return response()->json([
                 'status'  => true,
@@ -67,7 +68,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $token = $request->cookie('auth_token');
+        $token = $request->header('Authorization');
         $user = User::where('token', $token)->first();
         if ($user) {
             $user->update(['token' => null]);
