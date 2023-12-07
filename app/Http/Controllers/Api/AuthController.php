@@ -171,7 +171,6 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->input('email'))->first();
-        dd($user);
         if (!$user->hasVerifiedEmail()) {
             $code = random_int(1000, 9999);
 

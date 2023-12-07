@@ -27,6 +27,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'role_id',
         'token',
         'otp',
+        'verification_code',
+        'facebook_id',
+        'google_id',
     ];
 
     /**
@@ -54,5 +57,5 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Role::class);
     }
 
-    
+
 }
