@@ -159,46 +159,45 @@ class AuthController extends Controller
 
 
     public function sendVerificationCode(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|email|exists:users,email',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json([
-            'errors' => $validator->errors()->all(),
-        ], 422);
-    }
-
-    $user = User::where('email', $request->input('email'))->first();
-    dd($user);
-    if (!$user->hasVerifiedEmail()) {
-        $code = random_int(1000, 9999);
-
-        $user->update([
-            'verification_code' => $code,
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
         ]);
 
-        try {
-            Mail::to($request->email)->send(new ActiveMail($user->verification_code));
+        if ($validator->fails()) {
             return response()->json([
-                'message' => 'verification code sent successfully',
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 500);
+                'errors' => $validator->errors()->all(),
+            ], 422);
         }
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'Verification Code sent successfully.',
-        ]);
+        $user = User::where('email', $request->input('email'))->first();
+        dd($user);
+        if (!$user->hasVerifiedEmail()) {
+            $code = random_int(1000, 9999);
+
+            $user->verification_code = $code;
+            $user->save();
+
+            try {
+                Mail::to($request->email)->send(new ActiveMail($user->verification_code));
+                return response()->json([
+                    'message' => 'verification code sent successfully',
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                ], 500);
+            }
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Verification Code sent successfully.',
+            ]);
+        }
     }
-}
 
 
-    public function verify(Request $request,$code)
+    public function verify(Request $request, $code)
     {
         $validator = Validator::make($request->all(), [
             "verificationCode"  => ["required", "exists:users,verification_code"],
@@ -218,7 +217,4 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Email activated successfully']);
     }
-
-
-
 }
