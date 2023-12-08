@@ -28,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'token',
         'otp',
         'verification_code',
+        'verification_code_created_at',
         'facebook_id',
         'google_id',
         'email_verified_at',

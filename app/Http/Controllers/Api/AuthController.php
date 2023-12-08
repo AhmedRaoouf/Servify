@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -35,6 +34,13 @@ class AuthController extends Controller
             'image'    => $imageName,
             'role_id'  => Role::where('name', 'user')->value('id'),
         ]);
+
+        $code = random_int(1000, 9999);
+        $user->update([
+            'verification_code' => $code,
+            'verification_code_created_at' => now(),
+        ]);
+        // Mail::to($request->email)->send(new ActiveMail($user->verification_code));
 
         return response()->json([
             "status"  => true,
@@ -173,8 +179,10 @@ class AuthController extends Controller
         if (!$user->hasVerifiedEmail()) {
             $code = random_int(1000, 9999);
 
-            $user->verification_code = $code;
-            $user->save();
+            $user->update([
+                'verification_code' => $code,
+                'verification_code_created_at' => now(),
+            ]);
 
             try {
                 Mail::to($request->email)->send(new ActiveMail($user->verification_code));
@@ -191,7 +199,7 @@ class AuthController extends Controller
                 'status'  => true,
                 'message' => 'Verification Code sent successfully.',
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status'  => false,
                 'message' => 'Email is already verified'
@@ -200,25 +208,36 @@ class AuthController extends Controller
     }
 
     public function verify($code)
-{
-    $user = User::where('verification_code', $code)->first();
+    {
+        $user = User::where('verification_code', $code)->first();
 
-    if (!$user) {
+        if (!$user) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Verification code is not correct'
+            ], 404);
+        }
+        // Check if the verification code is still valid (within 3 minutes)
+        if (now()->diffInMinutes($user->verification_code_created_at) > 1) {
+            $user->update([
+                'verification_code' => null,
+                'verification_code_created_at' => null,
+            ]);
+            return response()->json([
+                'status' => false,
+                'message' => 'Verification code has expired',
+            ], 422);
+        }
+
+        $user->update([
+            'verification_code' => null,
+            'verification_code_created_at' => null,
+            'email_verified_at' => now(),
+        ]);
+
         return response()->json([
-            'status'  => false,
-            'message' => 'Verification code is not correct'
-        ], 404);
+            'status'  => true,
+            'message' => 'Email activated successfully'
+        ]);
     }
-
-    $user->update([
-        'verification_code' => null,
-        'email_verified_at' => now(),
-    ]);
-
-    return response()->json([
-        'status'  => true,
-        'message' => 'Email activated successfully'
-    ]);
-}
-
 }
