@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Kreait\Firebase\Exception\Auth\UserNotFound;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class AuthController extends Controller
 {
@@ -40,7 +42,7 @@ class AuthController extends Controller
             'verification_code' => $code,
             'verification_code_created_at' => now(),
         ]);
-        // Mail::to($request->email)->send(new ActiveMail($user->verification_code));
+        Mail::to($request->email)->send(new ActiveMail($user->verification_code));
 
         return response()->json([
             "status"  => true,
@@ -91,6 +93,85 @@ class AuthController extends Controller
         ]);
     }
 
+    public function handleGoogleRegister(Request $request, string $uid)
+    {
+        try {
+            // // Validate the incoming request data
+            // $validator = Validator::make($request->all(), [
+            //     'phone' => ['nullable', 'string', 'unique:users', 'regex:/^\+[0-9]{1,3}[0-9]{9}$/'],
+            // ]);
+
+            // if ($validator->fails()) {
+            //     return response()->json([
+            //         'status' => false,
+            //         'message' => $validator->errors()->all(),
+            //     ]);
+            // }
+
+            $firebase = Firebase::auth();
+            $userData = $firebase->getUser($uid);
+
+            $user = User::where('email', $userData->email)->first();
+
+            if ($user != null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "User already registered",
+
+                ]);
+            } else {
+                // Perform user registration
+                $access_token = Str::random(64);
+                $newuser = new User();
+                $newuser->name = $userData->displayName;
+                $newuser->email = $userData->email;
+                $newuser->google_id = $userData->providerData[0]->uid ;
+                $newuser->email_verified_at = now();
+                $newuser->password = Hash::make($userData->uid . now());
+                $newuser->token = $access_token;
+                $newuser->role_id = Role::where('name', 'user')->value('id');
+                $newuser->save();
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'You are successfully registered',
+                    'data' => new UserResource($newuser),
+                ]);
+            }
+
+        } catch (UserNotFound $e) {
+    return response()->json(['error' => $e->getMessage()], 404);
+}
+    }
+
+    public function handleGoogleLogin(Request $request, string $uid)
+    {
+        try {
+            // Check if the user with the given Google UID exists
+            $firebase = Firebase::auth();
+            $userData = $firebase->getUser($uid);
+            $user = User::where('email', $userData->email)->first();
+
+            if ($user == null) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "User Not Found",
+                ]);
+            }
+
+            // Log in the user
+            Auth::login($user);
+
+            // You can return user data or any other response as needed
+            return response()->json([
+                'status' => true,
+                'message' => 'Login successful',
+                'data' => new UserResource($user),
+            ]);
+        } catch (UserNotFound $e) {
+            return response()->json(['error' => $e->getMessage()], 404);
+        }
+    }
     function forget(Request $request)
     {
         $vaildator = Validator::make($request->all(), [

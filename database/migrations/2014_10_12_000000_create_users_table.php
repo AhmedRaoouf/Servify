@@ -24,8 +24,8 @@ return new class extends Migration
             $table->smallInteger('otp')->nullable();
             $table->smallInteger('verification_code')->nullable();
             $table->timestamp('verification_code_created_at')->nullable();
-            $table->integer('google_id')->nullable();
-            $table->integer('facebook_id')->nullable();
+            $table->string('google_id')->nullable();
+            $table->string('facebook_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

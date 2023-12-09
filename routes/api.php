@@ -15,17 +15,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post("/register", [AuthController::class, "register"]);
-Route::post("/login",[AuthController::class, "login"])->name('login');
+Route::post("/login", [AuthController::class, "login"])->name('login');
 
-Route::post('/forget',[AuthController::class,'forget']);
-Route::post('/otp/{otp}',[AuthController::class,'otp']);
-Route::post('/reset/{otp}',[AuthController::class,'reset']);
+Route::get('register/google/callback/{uid}', [AuthController::class, "handleGoogleRegister"]);
+Route::get('login/google/callback/{uid}', [AuthController::class, "handleGoogleLogin"]);
+
+Route::post('/forget', [AuthController::class, 'forget']);
+Route::post('/otp/{otp}', [AuthController::class, 'otp']);
+Route::post('/reset/{otp}', [AuthController::class, 'reset']);
 
 Route::middleware(['api_auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::post('/send-verification-code', [AuthController::class,'sendVerificationCode']);
-Route::post('/verify-email/{code}', [AuthController::class,'verify']);
-
-
+Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
+Route::post('/verify-email/{code}', [AuthController::class, 'verify']);
