@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ForgetController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,19 +15,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Authentication
 Route::post("/register", [AuthController::class, "register"]);
 Route::post("/login", [AuthController::class, "login"])->name('login');
-
-Route::get('register/google/callback/{uid}', [AuthController::class, "handleGoogleRegister"]);
 Route::get('login/google/callback/{uid}', [AuthController::class, "handleGoogleLogin"]);
-
-Route::post('/forget', [AuthController::class, 'forget']);
-Route::post('/otp/{otp}', [AuthController::class, 'otp']);
-Route::post('/reset/{otp}', [AuthController::class, 'reset']);
-
-Route::middleware(['api_auth'])->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-});
 
 Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
 Route::post('/verify-email/{code}', [AuthController::class, 'verify']);
+
+// Forget & Reset Password
+Route::post('/forget', [ForgetController::class, 'forget']);
+Route::post('/otp/{otp}', [ForgetController::class, 'otp']);
+Route::post('/reset/{otp}', [ForgetController::class, 'reset']);
+
+Route::middleware(['api_auth'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    //Profile
+    
+});
+
