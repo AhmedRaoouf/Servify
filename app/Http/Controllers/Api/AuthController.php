@@ -41,7 +41,7 @@ class AuthController extends Controller
             'verification_code_created_at' => now(),
         ]);
         Mail::to($request->email)->send(new ActiveMail($user->verification_code));
-        helper::responseMsg("You are successfully registered");
+        return helper::responseMsg("You are successfully registered");
     }
 
     public function login(LoginRequet $request)
@@ -60,7 +60,7 @@ class AuthController extends Controller
                 'user'    => new UserResource($user),
             ])->withCookie($cookie);
         }
-        helper::responseError('Invalid credentials', 401);
+        return helper::responseError('Invalid credentials', 401);
     }
 
     public function logout(Request $request)
