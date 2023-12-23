@@ -92,7 +92,7 @@ class AuthController extends Controller
 
             if ($user != null) {
                 Auth::login($user);
-                helper::responseData(new UserResource($user), 'Login successful');
+                return helper::responseData(new UserResource($user), 'Login successful');
             } else {
                 // Perform user registration
                 $access_token = Str::random(64);
@@ -105,7 +105,7 @@ class AuthController extends Controller
                 $newuser->token = $access_token;
                 $newuser->role_id = Role::where('name', 'user')->value('id');
                 $newuser->save();
-                helper::responseData(new UserResource($user), 'You are successfully registered');
+                return helper::responseData(new UserResource($user), 'You are successfully registered');
             }
         } catch (UserNotFound $e) {
             return response()->json(['error' => $e->getMessage()], 404);
