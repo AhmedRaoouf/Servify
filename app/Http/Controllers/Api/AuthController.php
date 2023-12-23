@@ -54,11 +54,7 @@ class AuthController extends Controller
             $user->token = $token;
             $user->save();
             $cookie = cookie('auth_token', $token, 60 * 24 * 30);
-            return response()->json([
-                'status'  => true,
-                'message' => 'Login successful',
-                'user'    => new UserResource($user),
-            ])->withCookie($cookie);
+            return helper::responseData(new UserResource($user) , 'Login successful')->withCookie($cookie);
         }
         return helper::responseError('Invalid credentials', 401);
     }
