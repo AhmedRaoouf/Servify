@@ -19,10 +19,11 @@ class UserResource extends JsonResource
             'token' => $this->token,
             'name' => $this->name,
             'email' => $this->email,
+            'provider' => $this->google_id ? 'Google' : 'Facebook',
             'email_active' => $this->email_verified_at ? 'Yes' : 'No',
             'phone' => $this->phone,
             'role' => Role::where('id', $this->role_id)->value('name'),
-            'image' => $this->image ? asset('uploads')."/$this->image" : 'Not Found',
+            'image' => $this->image ? asset('uploads') . "/$this->image" : 'Not Found',
         ];
     }
 }
