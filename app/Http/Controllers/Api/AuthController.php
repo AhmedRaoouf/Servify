@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Services;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequet;
 use App\Http\Requests\RegisterRequest;
@@ -13,7 +12,6 @@ use App\Models\User;
 use App\Services\service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
