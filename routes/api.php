@@ -34,7 +34,7 @@ Route::middleware(['api_auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Users
-    Route::put('user/image/update',[UserController::class,'uploadImage']);
+    Route::post('user/image/update',[UserController::class,'uploadImage']);
 
 });
 
