@@ -20,8 +20,8 @@ class UserController extends Controller
                 $userImage = service::uploadImage($request->image, 'users/');
                 $user->update(['image' => $userImage]);
             } else {
-                $userImage = service::uploadImage($request->image, 'users/');
-                $user->update(['image' => $userImage]);
+                // $userImage = service::uploadImage($request->image, 'users/');
+                $user->update(['image' => $request->image]);
             }
             return Service::responseData(['image'=> $userImage],'Image updated successfully');
         } else {
