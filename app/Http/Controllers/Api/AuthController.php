@@ -40,7 +40,7 @@ class AuthController extends Controller
             'verification_code_created_at' => now(),
         ]);
         Mail::to($request->email)->send(new ActiveMail($user->verification_code));
-        return service::responseMsg("You are successfully registered");
+        return service::responseData(new UserResource($user),"You are successfully registered");
     }
 
     public function login(LoginRequet $request)

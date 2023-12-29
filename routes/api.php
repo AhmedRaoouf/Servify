@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ForgetController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,7 +34,7 @@ Route::middleware(['api_auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Profile
-    Route::get('');
+    Route::put('user/image/update',[UserController::class,'uploadImage']);
 
 });
 
