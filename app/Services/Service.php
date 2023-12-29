@@ -8,9 +8,7 @@ class Service
     public static function uploadImage($image, $subdirectory)
     {
         if ($image) {
-            $imageConverter = Image::make($image)->encode('webp', 90);
-            dd($imageConverter);
-            $quality = max(0, min(100, 90));
+            $imageConverter = Image::make($image)->stream('webp', 90);
             $imageName = time() . '.webp';
             $destination = public_path('uploads/' . $subdirectory);
             $imageConverter->save($destination . '/' . $imageName);
