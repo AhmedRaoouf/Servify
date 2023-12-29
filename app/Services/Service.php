@@ -9,9 +9,10 @@ class Service
     {
         if ($image) {
             $imageConverter = Image::make($image)->encode('webp', 90);
+            $quality = max(0, min(100, 90));
             $imageName = time() . '.webp';
             $destination = public_path('uploads/' . $subdirectory);
-            $imageConverter->save($destination, $imageName);
+            $imageConverter->save($destination . '/' . $imageName);
             return $subdirectory.$imageName;
         }else{
             return null;
