@@ -11,7 +11,7 @@ class Service
             $imageConverter = Image::make($image)->encode('webp', 90);
             $imageName = time() . '.webp';
             $destination = public_path('uploads/' . $subdirectory);
-            $imageConverter->move($destination, $imageName);
+            $imageConverter->save($destination, $imageName);
             return $subdirectory.$imageName;
         }else{
             return null;
