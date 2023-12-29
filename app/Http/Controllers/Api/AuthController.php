@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helpers\helper;
+use App\Services;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequet;
 use App\Http\Requests\RegisterRequest;
@@ -10,6 +10,7 @@ use App\Http\Resources\UserResource;
 use App\Mail\ActiveMail;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +25,7 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $imageName = helper::uploadImage($request->image, 'users/');
+        $imageName = service::uploadImage($request->image, 'users/');
 
         $user = User::create([
             'name'     => $request->name,
@@ -41,7 +42,7 @@ class AuthController extends Controller
             'verification_code_created_at' => now(),
         ]);
         Mail::to($request->email)->send(new ActiveMail($user->verification_code));
-        return helper::responseMsg("You are successfully registered");
+        return service::responseMsg("You are successfully registered");
     }
 
     public function login(LoginRequet $request)
@@ -54,9 +55,9 @@ class AuthController extends Controller
             $user->token = $token;
             $user->save();
             $cookie = cookie('auth_token', $token, 60 * 24 * 30);
-            return helper::responseData(new UserResource($user), 'Login successful')->withCookie($cookie);
+            return service::responseData(new UserResource($user), 'Login successful')->withCookie($cookie);
         }
-        return helper::responseError('Invalid credentials', 401);
+        return service::responseError('Invalid credentials', 401);
     }
 
     public function logout(Request $request)
@@ -66,9 +67,9 @@ class AuthController extends Controller
         if ($user) {
             $user->update(['token' => null]);
             Auth::logout();
-            return helper::responseMsg('Logged out successfully');
+            return service::responseMsg('Logged out successfully');
         }
-        return helper::responseError('Invalid token', 404);
+        return service::responseError('Invalid token', 404);
     }
 
     public function handleGoogleLogin(Request $request, string $uid)
@@ -81,7 +82,7 @@ class AuthController extends Controller
             if ($user != null) {
                 $user->update(['token' => $access_token]);
                 Auth::login($user);
-                return helper::responseData(new UserResource($user), 'Login successful');
+                return service::responseData(new UserResource($user), 'Login successful');
             } else {
                 // Perform user registration
                 $access_token = Str::random(64);
@@ -94,7 +95,7 @@ class AuthController extends Controller
                 $newuser->token = $access_token;
                 $newuser->role_id = Role::where('name', 'user')->value('id');
                 $newuser->save();
-                return helper::responseData(new UserResource($user), 'You are successfully registered');
+                return service::responseData(new UserResource($user), 'You are successfully registered');
             }
         } catch (UserNotFound $e) {
             return response()->json(['error' => $e->getMessage()], 404);
@@ -111,7 +112,7 @@ class AuthController extends Controller
             if ($user != null) {
                 $user->update(['token' => $access_token]);
                 Auth::login($user);
-                return helper::responseData(new UserResource($user), 'Login successful');
+                return service::responseData(new UserResource($user), 'Login successful');
             } else {
                 // Perform user registration
                 $access_token = Str::random(64);
@@ -124,7 +125,7 @@ class AuthController extends Controller
                 $newuser->token = $access_token;
                 $newuser->role_id = Role::where('name', 'user')->value('id');
                 $newuser->save();
-                return helper::responseData(new UserResource($newuser), 'You are successfully registered');
+                return service::responseData(new UserResource($newuser), 'You are successfully registered');
             }
         } catch (UserNotFound $e) {
             return response()->json(['error' => $e->getMessage()], 404);
@@ -191,7 +192,7 @@ class AuthController extends Controller
                 'verification_code' => null,
                 'verification_code_created_at' => null,
             ]);
-            return helper::responseError('Verification code has expired',422);
+            return service::responseError('Verification code has expired',422);
         }
 
         $user->update([

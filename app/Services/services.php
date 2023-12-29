@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Helpers;
-use Intervention\Image\Image;
+namespace App\Services;
+use Intervention\Image\Facades\Image;
 
-class helper
+class service
 {
-    public static function uploadImage($image, $subdirectory, $prefix = '')
+    public static function uploadImage($image, $subdirectory)
     {
-
         if ($image) {
-            $ext = $image->getClientOriginalExtension();
-            $imageName = $prefix . time() . '.' . $ext;
+            $imageConverter = Image::make($image)->encode('webp', 90);
+            $imageName = time() . '.webp';
             $destination = public_path('uploads/' . $subdirectory);
             $image->move($destination, $imageName);
             return $subdirectory.$imageName;
