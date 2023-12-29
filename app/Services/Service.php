@@ -3,7 +3,7 @@
 namespace App\Services;
 use Intervention\Image\Facades\Image;
 
-class service
+class Service
 {
     public static function uploadImage($image, $subdirectory)
     {
