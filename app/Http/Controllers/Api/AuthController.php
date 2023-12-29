@@ -66,17 +66,9 @@ class AuthController extends Controller
         if ($user) {
             $user->update(['token' => null]);
             Auth::logout();
-
-            return response()->json([
-                'status'  => true,
-                'message' => 'Logged out successfully',
-            ]);
+            return helper::responseMsg('Logged out successfully');
         }
-
-        return response()->json([
-            'status'  => false,
-            'message' => 'Invalid token',
-        ]);
+        return helper::responseError('Invalid token', 404);
     }
 
     public function handleGoogleLogin(Request $request, string $uid)
@@ -85,8 +77,9 @@ class AuthController extends Controller
             $firebase = Firebase::auth();
             $userData = $firebase->getUser($uid);
             $user = User::where('email', $userData->email)->first();
-
+            $access_token = Str::random(64);
             if ($user != null) {
+                $user->update(['token' => $access_token]);
                 Auth::login($user);
                 return helper::responseData(new UserResource($user), 'Login successful');
             } else {
@@ -97,7 +90,7 @@ class AuthController extends Controller
                 $newuser->email = $userData->email;
                 $newuser->google_id = $userData->providerData[0]->uid;
                 $newuser->email_verified_at = now();
-                $newuser->password = Hash::make($userData->uid . now());
+                $newuser->password = $userData->uid . now();
                 $newuser->token = $access_token;
                 $newuser->role_id = Role::where('name', 'user')->value('id');
                 $newuser->save();
@@ -114,8 +107,9 @@ class AuthController extends Controller
             $firebase = Firebase::auth();
             $userData = $firebase->getUser($uid);
             $user = User::where('email', $userData->email)->first();
-
+            $access_token = Str::random(64);
             if ($user != null) {
+                $user->update(['token' => $access_token]);
                 Auth::login($user);
                 return helper::responseData(new UserResource($user), 'Login successful');
             } else {
@@ -126,7 +120,7 @@ class AuthController extends Controller
                 $newuser->email = $userData->email;
                 $newuser->facebook_id = $userData->providerData[0]->uid;
                 $newuser->email_verified_at = now();
-                $newuser->password = Hash::make($userData->uid . now()); // You might want to improve how you generate passwords
+                $newuser->password =$userData->uid . now(); // You might want to improve how you generate passwords
                 $newuser->token = $access_token;
                 $newuser->role_id = Role::where('name', 'user')->value('id');
                 $newuser->save();
@@ -192,15 +186,12 @@ class AuthController extends Controller
             ], 404);
         }
         // Check if the verification code is still valid (within 3 minutes)
-        if (now()->diffInMinutes($user->verification_code_created_at) > 1) {
+        if (now()->diffInMinutes($user->verification_code_created_at) > 3) {
             $user->update([
                 'verification_code' => null,
                 'verification_code_created_at' => null,
             ]);
-            return response()->json([
-                'status' => false,
-                'message' => 'Verification code has expired',
-            ], 422);
+            return helper::responseError('Verification code has expired',422);
         }
 
         $user->update([
