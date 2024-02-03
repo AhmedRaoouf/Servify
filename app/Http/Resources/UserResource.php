@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'token' => $this->token,
             'name' => $this->name,
             'email' => $this->email,
-            'provider' => $this->google_id ? 'Google' : 'Facebook',
+            'provider' => $this->google_id ? 'Google' : ($this->facebook_id ? 'Facebook' : null),
             'email_active' => $this->email_verified_at ? 'Yes' : 'No',
             'phone' => $this->phone,
             'role' => Role::where('id', $this->role_id)->value('name'),

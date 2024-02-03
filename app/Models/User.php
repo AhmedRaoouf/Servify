@@ -25,13 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone',
         'image',
         'role_id',
-        'token',
-        'otp',
-        'verification_code',
-        'verification_code_created_at',
-        'facebook_id',
-        'google_id',
-        'email_verified_at',
+        'gender',
+        'country_id',
     ];
 
     /**
@@ -57,6 +52,30 @@ class User extends Authenticatable implements MustVerifyEmail
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class,'user_modules');
+    }
+
+    public function hasModule($module)
+    {
+        if($this->modules->contains('path',$module))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function canAccess($module)
+    {
+        if ( $this->role->name == 'admin' ) {
+            return true;
+        }else {
+            return $this->hasModule($module);
+        }
+        return false;
     }
 
 

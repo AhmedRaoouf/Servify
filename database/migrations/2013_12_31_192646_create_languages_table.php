@@ -12,13 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('languages', function (Blueprint $table) {
             $table->id();
+            $table->string('local');
             $table->string('name');
-            $table->timestamps();
+            $table->softDeletes();
         });
 
-        $this->run();
+        $this->run(); // Call the run method after creating the table
     }
 
     /**
@@ -26,18 +27,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('languages');
     }
 
-    /**
-     * Seed the roles table.
-     */
     public function run(): void
     {
-        DB::table('roles')->insert([
-            ['name' => 'superadmin'],
-            ['name' => 'admin'],
-            ['name' => 'user'],
+        DB::table('languages')->insert([
+            ['local' => 'en','name' => 'English'],
+            ['local' => 'ar','name' => 'العربية'],
         ]);
     }
 };

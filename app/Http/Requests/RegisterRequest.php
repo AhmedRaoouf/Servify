@@ -24,10 +24,9 @@ class RegisterRequest extends FormRequest
         $rules =  [
             'name' => ['required', 'string','min:5', 'max:255', 'regex:/^[A-Za-z0-9_ ]+$/',],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'max:50'],
+            'password' => ['required', 'string','confirmed', 'min:8', 'max:50'],
             'phone' => ['nullable', 'string', 'regex:/^(?:\+20)?(?:01[0-5])[0-9]{8}$/'],
             'image' => ['nullable', 'image', 'max:5120'],
-            //tokem
         ];
         return $rules;
     }

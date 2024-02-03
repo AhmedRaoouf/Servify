@@ -53,7 +53,7 @@ class AuthController extends Controller
             $user->token = $token;
             $user->save();
             $cookie = cookie('auth_token', $token, 60 * 24 * 30);
-            return service::responseData(new UserResource($user), 'Login successful')->withCookie($cookie);
+            return service::responseData(new UserResource($user),'Login successful')->withCookie($cookie);
         }
         return service::responseError('Invalid credentials', 401);
     }
@@ -105,6 +105,7 @@ class AuthController extends Controller
         try {
             $firebase = Firebase::auth();
             $userData = $firebase->getUser($uid);
+            dd($userData);
             $user = User::where('email', $userData->email)->first();
             $access_token = Str::random(64);
             if ($user != null) {
