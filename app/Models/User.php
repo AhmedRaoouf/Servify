@@ -56,27 +56,40 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function modules()
     {
-        return $this->belongsToMany(Module::class,'user_modules');
+        return $this->belongsToMany(Module::class, 'user_modules');
     }
 
     public function hasModule($module)
     {
-        if($this->modules->contains('path',$module))
-        {
-            return true;
-        }
-        return false;
+        return $this->modules->contains('path', $module);
     }
 
     public function canAccess($module)
     {
-        if ( $this->role->name == 'admin' ) {
-            return true;
-        }else {
-            return $this->hasModule($module);
-        }
-        return false;
+        return $this->role->name == 'admin' ? true : $this->hasModule($module);
     }
 
+    public function auth()
+    {
+        return $this->hasOne(UserAuthentication::class);
+    }
 
+    public function location()
+    {
+        return $this->hasOne(UserLocation::class);
+    }
+
+    public function governorate()
+    {
+        return $this->belongsTo(Governorate::class);
+    }
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function services()
+    {
+        return $this->belongsToMany(Service::class, 'user_services');
+    }
 }

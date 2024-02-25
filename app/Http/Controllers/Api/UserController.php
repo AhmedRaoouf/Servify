@@ -25,7 +25,7 @@ class UserController extends Controller
             }
             return Service::responseData(['image' => asset("uploads/$userImage")], 'Image updated successfully');
         } else {
-            return Service::responseError('Please provide an image.', '500');
+            return Service::responseMsg('No image uploaded.');
         }
     }
 }

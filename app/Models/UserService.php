@@ -9,5 +9,10 @@ class UserService extends Model
 {
     use HasFactory;
     protected $table = 'user_services';
-    
+    protected $fillable = [
+        'user_id',
+        'service_id',
+        'description'
+    ];
+
 }

@@ -18,7 +18,7 @@ class Service
         }
     }
 
-    public static function responseError($msg, $statusCode = 200)
+    public static function responseError($msg, $statusCode)
     {
         return response()->json([
             'status' => false,

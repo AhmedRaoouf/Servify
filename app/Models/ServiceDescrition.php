@@ -5,9 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ServiceFeature extends Model
+class ServiceDescrition extends Model
 {
     use HasFactory;
-    protected $fillable = ['id','service_id'];
+
+    protected $fillable = [
+        'name',
+        'service_id',
+        'language_id',
+    ];
 
 }

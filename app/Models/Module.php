@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Module extends Model
 {
-    use HasFactory;
-    protected $fillable = ['name','path'];
+    use SoftDeletes;
+    protected $fillable = ['name', 'path'];
 
-    
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

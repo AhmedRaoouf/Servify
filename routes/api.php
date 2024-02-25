@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ForgetController;
+use App\Http\Controllers\api\ProfileController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,24 +18,27 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Authentication
-Route::post("/register", [AuthController::class, "register"]);
-Route::post("/login", [AuthController::class, "login"])->name('login');
-Route::get('login/google/callback/{uid}', [AuthController::class, "handleGoogleLogin"]);
-Route::get('login/facebook/callback/{uid}', [AuthController::class, "handleFacebookLogin"]);
+Route::middleware(['lang'])->group(function () {
 
-Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
-Route::post('/verify-email/{code}', [AuthController::class, 'verify']);
+    Route::post("/register", [AuthController::class, "register"]);
+    Route::post("/login", [AuthController::class, "login"])->name('login');
+    Route::get('login/google/callback/{uid}', [AuthController::class, "handleGoogleLogin"]);
+    Route::get('login/facebook/callback/{uid}', [AuthController::class, "handleFacebookLogin"]);
 
-// Forget & Reset Password
-Route::post('/forget', [ForgetController::class, 'forget']);
-Route::post('/otp/{otp}', [ForgetController::class, 'otp']);
-Route::post('/reset/{otp}', [ForgetController::class, 'reset']);
+    Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
+    Route::post('/verify-email/{code}', [AuthController::class, 'verify']);
 
-Route::middleware(['api_auth'])->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
+    // Forget & Reset Password
+    Route::post('/forget', [ForgetController::class, 'forget']);
+    Route::post('/otp/{otp}', [ForgetController::class, 'otp']);
+    Route::post('/reset/{otp}', [ForgetController::class, 'reset']);
 
-    // Users
-    Route::post('user/image/update',[UserController::class,'uploadImage']);
-
+    Route::middleware(['api_auth'])->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        // Users
+        Route::post('user/image/update', [UserController::class, 'uploadImage']);
+        //profile
+        Route::get('/profile', [ProfileController::class, 'show']);
+        Route::patch('/profile/update', [ProfileController::class, 'update']);
+    });
 });
-

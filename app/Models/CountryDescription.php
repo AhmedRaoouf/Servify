@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class CountryDescription extends Model
 {
     use HasFactory;
-    protected $fillable = ['id','name','country_id','language_id'];
+    protected $fillable = [
+        'name',
+        'country_id',
+        'language_id'
+    ];
 
 }
