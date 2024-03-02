@@ -13,18 +13,18 @@ class ProfileController extends Controller
     public function show(Request $request)
     {
         $token = $request->header('Authorization');
-        $user = User::where('token',$token)->first();
+        $user = User::where('token', $token)->first();
         if ($user) {
-            return Service::responseData(new ProfileResource($user),'Profile');
-        }else{
-            return Service::responseError('User not found',404);
+            return Service::responseData(new ProfileResource($user), 'Profile');
+        } else {
+            return Service::responseError('User not found', 404);
         }
     }
 
     public function update(Request $request)
     {
         $token = $request->header('Authorization');
-        $user = User::where('token',$token)->first();
+        $user = User::where('token', $token)->first();
         if ($request->name) {
             $user->update(['name' => $request->name]);
         }
