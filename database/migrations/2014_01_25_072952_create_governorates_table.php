@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('governorates', function (Blueprint $table) {
             $table->id();
+            $table->timestamps();
             $table->softDeletes();
         });
     }

@@ -3,8 +3,11 @@
 namespace App\Http\Resources;
 
 use App\Models\Role;
+use App\Models\UserAuthentication;
+use App\Models\UserLocation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class UserResource extends JsonResource
 {
@@ -15,15 +18,18 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $location = UserLocation::where( 'user_id', $this->id )->first();
+        $auth = UserAuthentication::where( 'user_id', $this->id )->first();
         return [
-            'token' => $this->token,
+            // 'token' => $this->token,
             'name' => $this->name,
             'email' => $this->email,
-            'provider' => $this->google_id ? 'Google' : ($this->facebook_id ? 'Facebook' : null),
-            'email_active' => $this->email_verified_at ? 'Yes' : 'No',
             'phone' => $this->phone,
+            'birthday' => $this->birthday,
             'role' => Role::where('id', $this->role_id)->value('name'),
             'image' => $this->image ? asset('uploads') . "/$this->image" : 'Not Found',
+            'user_auth' => new UserAuthResource( $auth ),
+            'user_location' => new UserLocationResource( $location ),
         ];
     }
 }

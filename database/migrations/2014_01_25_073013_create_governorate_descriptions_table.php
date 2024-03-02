@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('governorate_descriptions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+
             $table->foreignId('governorate_id')->constrained('governorates')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('language_id')->constrained('languages')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('country_id')->constrained('countries')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('country_id')->default(1)->constrained('countries')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->timestamps();
         });
     }
 

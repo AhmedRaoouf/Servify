@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('governorate_id')->constrained('governorates')->cascadeOnDelete()->cascadeOnUpdate();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
+            $table->timestamps();
+
         });
     }
 

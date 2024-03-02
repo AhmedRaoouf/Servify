@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Mail\ForgetPasswordMail;
 use App\Models\User;
+use App\Models\UserAuthentication;
+use App\Services\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -19,31 +21,24 @@ class ForgetController extends Controller
         ]);
 
         if ($vaildator->fails()) {
-            return response()->json([
-                'errors' => $vaildator->errors()->all(),
-            ], 422);
+            return Service::responseError($vaildator->errors()->all(),422);
         }
 
         $user = User::where('email', $request->email)->first();
         $otp = random_int(1000, 9999);
-        $user->update([
-            'otp' => $otp,
-        ]);
+        $userAuth = UserAuthentication::where('user_id',$user->id)->first();
+        $userAuth->update(['otp' => $otp,]);
         try {
-            Mail::to($request->email)->send(new ForgetPasswordMail($user->otp));
-            return response()->json([
-                'message' => 'OTP sent successfully'
-            ]);
+            Mail::to($request->email)->send(new ForgetPasswordMail($userAuth->otp));
+            return Service::responseMsg('OTP sent successfully');
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
+            return Service::responseError($e->getMessage(),500);
         }
     }
 
     function otp($otp)
     {
-        $user = User::where('otp', $otp)->first();
+        $user = UserAuthentication::where('otp', $otp)->first();
 
         $response = [
             'status' => $user !== null,
@@ -63,14 +58,14 @@ class ForgetController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()->all()], 422);
+            return Service::responseError($validator->errors()->all(),422);
         }
 
-        $user = User::where('otp', $otp)->first();
-
-        if (!$user) {
+        $userAuth = UserAuthentication::where('otp', $otp)->first();
+        if (!$userAuth) {
             return response()->json(['message' => 'OTP is not correct'], 404);
         }
+        $user = User::where('id',$userAuth->user_id)->first();
 
         if (Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'New password must be different from the previous password'], 422);
@@ -78,8 +73,8 @@ class ForgetController extends Controller
 
         $user->update([
             'password' => Hash::make($request->password),
-            'otp' => null,
         ]);
+        $userAuth->update(['otp'=>null]);
 
         return response()->json(['message' => 'Password changed successfully']);
     }

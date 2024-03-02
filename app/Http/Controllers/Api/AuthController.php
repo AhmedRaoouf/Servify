@@ -9,6 +9,8 @@ use App\Http\Resources\UserResource;
 use App\Mail\ActiveMail;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserAuthentication;
+use App\Models\UserLocation;
 use App\Services\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,16 +32,26 @@ class AuthController extends Controller
             'email'    => $request->email,
             'phone'    => $request->phone,
             'password' => $request->password,
+            'birthday' => $request->birthday,
             'image'    => $imageName,
             'role_id'  => Role::where('name', 'user')->value('id'),
         ]);
+        $userLocation = UserLocation::create([
+            'user_id' => $user->id,
+            'country_id' => $request->country_id,
+            'governorate_id' => $request->governorate_id,
+            'latitude'    => $request->latitude,
+            'longitude'    => $request->longitude,
 
+        ]);
         $code = random_int(1000, 9999);
-        $user->update([
+        $userAuth = UserAuthentication::create([
+            'user_id' => $user->id,
             'verification_code' => $code,
             'verification_code_created_at' => now(),
         ]);
-        Mail::to($request->email)->send(new ActiveMail($user->verification_code));
+
+        Mail::to($request->email)->send(new ActiveMail($userAuth->verification_code));
         return service::responseData(new UserResource($user), "You are successfully registered");
     }
 
@@ -50,8 +62,11 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = Str::random(64);
-            $user->token = $token;
-            $user->save();
+
+            $userAuth = UserAuthentication::where('user_id', $user->id)->first();
+            $userAuth->token = $token;
+            $userAuth->save();
+
             $cookie = cookie('auth_token', $token, 60 * 24 * 30);
             return service::responseData(new UserResource($user), 'Login successful')->withCookie($cookie);
         }
@@ -61,9 +76,9 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $token = $request->header('Authorization');
-        $user = User::where('token', $token)->first();
-        if ($user) {
-            $user->update(['token' => null]);
+        $userAuth  = UserAuthentication::where('token', $token)->first();
+        if ($userAuth) {
+            $userAuth->update(['token' => null]);
             Auth::logout();
             return service::responseMsg('Logged out successfully');
         }
@@ -76,22 +91,27 @@ class AuthController extends Controller
             $firebase = Firebase::auth();
             $userData = $firebase->getUser($uid);
             $user = User::where('email', $userData->email)->first();
-            $access_token = Str::random(64);
+            $token = Str::random(64);
             if ($user != null) {
-                $user->update(['token' => $access_token]);
+                $userAuth = UserAuthentication::where('user_id', $user->id)->first();
+                $userAuth->token = $token;
+                $userAuth->save();
                 Auth::login($user);
                 return service::responseData(new UserResource($user), 'Login successful');
             } else {
-                $access_token = Str::random(64);
-                $newuser = new User();
-                $newuser->name = $userData->displayName;
-                $newuser->email = $userData->email;
-                $newuser->google_id = $userData->providerData[0]->uid;
-                $newuser->email_verified_at = now();
-                $newuser->password = $userData->uid . now();
-                $newuser->token = $access_token;
-                $newuser->role_id = Role::where('name', 'user')->value('id');
-                $newuser->save();
+                $newuser = User::create([
+                    'name' => $userData->displayName,
+                    'email' => $userData->email,
+                    'password' => $userData->uid . now(),
+                    'role_id' => Role::where('name', 'user')->value('id'),
+                ]);
+                $userAuth = UserAuthentication::create([
+                    'user_id'   => $newuser->id,
+                    'token'  => $token,
+                    'google_id' => $userData->providerData[0]->uid,
+                    'email_verified_at' => now(),
+                ]);
+
                 return service::responseData(new UserResource($user), 'You are successfully registered');
             }
         } catch (UserNotFound $e) {
@@ -105,24 +125,32 @@ class AuthController extends Controller
             $firebase = Firebase::auth();
             $userData = $firebase->getUser($uid);
             $user = User::where('email', $userData->email)->first();
-            $access_token = Str::random(64);
+            $token = Str::random(64);
 
             if ($user != null) {
-                $user->update(['token' => $access_token]);
+                $userAuth = UserAuthentication::where('user_id', $user->id)->first();
+                $userAuth->token = $token;
+                $userAuth->save();
                 Auth::login($user);
                 return service::responseData(new UserResource($user), 'Login successful');
-            }
-            $access_token = Str::random(64);
-            $newuser = new User();
-            $newuser->name = $userData->displayName;
-            $newuser->facebook_id = $userData->providerData[0]->uid;
-            $newuser->email_verified_at = now();
-            $newuser->password = $userData->uid . now();
-            $newuser->token = $access_token;
-            $newuser->role_id = Role::where('name', 'user')->value('id');
-            $newuser->save();
+            }else{
 
-            return service::responseData(new UserResource($newuser), 'You are successfully registered');
+                $newuser = User::create([
+                    'name' => $userData->displayName,
+                    'email' => $userData->email,
+                    'password' => $userData->uid . now(),
+                    'role_id' => Role::where('name', 'user')->value('id'),
+
+                ]);
+                $userAuth = UserAuthentication::create([
+                    'user_id'   => $newuser->id,
+                    'token'  => $token,
+                    'facebook_id' => $userData->providerData[0]->uid,
+                    'email_verified_at' => now(),
+                ]);
+
+                return service::responseData(new UserResource($user), 'You are successfully registered');
+            }
         } catch (UserNotFound $e) {
             return response()->json(['error' => $e->getMessage()], 404);
         }
@@ -142,16 +170,17 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->input('email'))->first();
-        if (!$user->hasVerifiedEmail()) {
+        $userAuth = UserAuthentication::where('user_id',$user->id)->first();
+        if (!$userAuth->email_verified_at) {
             $code = random_int(1000, 9999);
 
-            $user->update([
+            $userAuth->update([
                 'verification_code' => $code,
                 'verification_code_created_at' => now(),
             ]);
 
             try {
-                Mail::to($request->email)->send(new ActiveMail($user->verification_code));
+                Mail::to($request->email)->send(new ActiveMail($userAuth->verification_code));
                 return response()->json([
                     'message' => 'verification code sent successfully',
                 ]);
@@ -175,24 +204,22 @@ class AuthController extends Controller
 
     public function verify($code)
     {
-        $user = User::where('verification_code', $code)->first();
-
-        if (!$user) {
+        $userAuth = UserAuthentication::where('verification_code', $code)->first();
+        if (!$userAuth) {
             return response()->json([
                 'status'  => false,
                 'message' => 'Verification code is not correct'
             ], 404);
         }
-        // Check if the verification code is still valid (within 3 minutes)
-        if (now()->diffInMinutes($user->verification_code_created_at) > 3) {
-            $user->update([
+        if (now()->diffInMinutes($userAuth->verification_code_created_at) > 3) {
+            $userAuth->update([
                 'verification_code' => null,
                 'verification_code_created_at' => null,
             ]);
             return service::responseError('Verification code has expired', 422);
         }
 
-        $user->update([
+        $userAuth->update([
             'verification_code' => null,
             'verification_code_created_at' => null,
             'email_verified_at' => now(),
@@ -203,4 +230,5 @@ class AuthController extends Controller
             'message' => 'Email activated successfully'
         ]);
     }
+
 }

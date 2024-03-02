@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
+use App\Models\UserAuthentication;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +19,7 @@ class Api_auth
         $token =$request->header('Authorization');
         if($token !== null)
         {
-            $user = User::where('token',"=",$token)->first();
+            $user = UserAuthentication::where('token',"=",$token)->first();
             if($user !==null)
             {
                 return $next($request);

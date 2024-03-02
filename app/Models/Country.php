@@ -20,6 +20,7 @@ class Country extends Model
         $language_id = $language_id ?: currentLanguage()->id;
         return $this->hasMany(CountryDescription::class)->where('language_id', $language_id)->first();
     }
+    
 
     public function withDescription($country_id=null)
     {
