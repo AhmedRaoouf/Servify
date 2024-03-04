@@ -169,7 +169,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
 
     ])->toArray(),
 
@@ -185,7 +184,6 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'LaravelLocalization' => Mcamara\LaravelLocalization\Facades\LaravelLocalization::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
