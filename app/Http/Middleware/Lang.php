@@ -17,7 +17,7 @@ class Lang
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $lang = $request->session()->get('lang') ?? 'ar';
+        $lang = $request->header('lang') ?? 'ar';
         LaravelLocalization::setLocale($lang);
         return $next($request);
     }
