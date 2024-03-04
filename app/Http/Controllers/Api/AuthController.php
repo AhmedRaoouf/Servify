@@ -32,7 +32,6 @@ class AuthController extends Controller
             'email'    => $request->email,
             'phone'    => $request->phone,
             'password' => $request->password,
-            'birthday' => $request->birthday,
             'image'    => $imageName,
             'role_id'  => Role::where('name', 'user')->value('id'),
         ]);
