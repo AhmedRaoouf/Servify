@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->enum('status',['true','false'])->default('false');
             $table->timestamps();
             $table->softDeletes();
         });

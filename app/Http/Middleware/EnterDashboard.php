@@ -16,7 +16,7 @@ class EnterDashboard
      */
     public function handle(Request $request, Closure $next): Response
     {
-        
+
         $roleName = Auth::user()->role->name;
         if ($roleName == 'admin' or $roleName == 'superadmin') {
             return $next($request);

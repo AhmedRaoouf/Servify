@@ -29,9 +29,10 @@ class AuthController extends Controller
                 return redirect(url('/dashboard/home'));
             }else{
                 $request->session()->flash('error-msg', 'credentials not correct');
-                return back();
-
+                return redirect(url('dashboard/login'));
             }
+        }else{
+            return redirect(url('/'));
         }
     }
 

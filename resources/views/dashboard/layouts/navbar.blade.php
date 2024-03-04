@@ -23,21 +23,16 @@
                 <span class="d-sm-inline d-none">{{auth()->user()->name}}</span>
               </a>
             </li>
-            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                  <i class="sidenav-toggler-line bg-white"></i>
-                  <i class="sidenav-toggler-line bg-white"></i>
-                  <i class="sidenav-toggler-line bg-white"></i>
+            <li class="nav-item d-flex align-items-center">
+                <h6 class="mb-0">Light / Dark</h6>
+                <div class="form-check form-switch ps-0 ms-auto my-auto">
+                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version"
+                        onclick="darkMode(this)">
                 </div>
-              </a>
             </li>
-            <li class="nav-item px-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-white p-0">
-                <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
-              </a>
-            </li>
-            <li class="nav-item dropdown pe-2 d-flex align-items-center">
+            
+
+            <li class="nav-item dropdown px-2 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-white p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-bell cursor-pointer"></i>
               </a>

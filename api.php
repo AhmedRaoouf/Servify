@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 // Authentication
 
     Route::post("/register", [AuthController::class, "register"]);
-    Route::post("/login", [AuthController::class, "login"]);
+    Route::post("/login", [AuthController::class, "login"])->name('login');
     Route::get('login/google/callback/{uid}', [AuthController::class, "handleGoogleLogin"]);
     Route::get('login/facebook/callback/{uid}', [AuthController::class, "handleFacebookLogin"]);
 

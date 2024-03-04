@@ -18,10 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone')->nullable();
-            $table->enum('gender',['male','female'])->default('male');
             $table->foreignId('role_id')->constrained('roles','id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('image')->nullable();
-            $table->date('birthday')->nullable();
             $table->enum('is_specialist',['true','false'])->default('false');
             $table->timestamps();
             $table->softDeletes();
