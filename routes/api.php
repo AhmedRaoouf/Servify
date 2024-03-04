@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Authentication
-
+Route::middleware(['lang'])->group(function (){
+    
     Route::post("/register", [AuthController::class, "register"]);
     Route::post("/login", [AuthController::class, "login"]);
     Route::get('login/google/callback/{uid}', [AuthController::class, "handleGoogleLogin"]);
@@ -40,3 +41,4 @@ use Illuminate\Support\Facades\Route;
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::patch('/profile/update', [ProfileController::class, 'update']);
     });
+});
