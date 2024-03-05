@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 // Authentication
 Route::middleware(['lang'])->group(function (){
-    
+
     Route::post("/register", [AuthController::class, "register"]);
     Route::post("/login", [AuthController::class, "login"]);
     Route::get('login/google/callback/{uid}', [AuthController::class, "handleGoogleLogin"]);
@@ -33,7 +33,7 @@ Route::middleware(['lang'])->group(function (){
     Route::post('/otp/{otp}', [ForgetController::class, 'otp']);
     Route::post('/reset/{otp}', [ForgetController::class, 'reset']);
 
-    Route::middleware(['api_auth','verified'])->group(function () {
+    Route::middleware(['api_auth','api_authVerify'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         // Users
         Route::post('user/image/update', [UserController::class, 'uploadImage']);

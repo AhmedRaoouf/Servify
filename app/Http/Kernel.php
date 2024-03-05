@@ -58,6 +58,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'lang' => \App\Http\Middleware\Lang::class,
         'api_auth' => \App\Http\Middleware\Api_auth::class,
+        'api_authVerify' => \App\Http\Middleware\Api_AuthVerify::class,
         'enter-dashboard' => \App\Http\Middleware\EnterDashboard::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
@@ -69,6 +70,6 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        
+
     ];
 }
