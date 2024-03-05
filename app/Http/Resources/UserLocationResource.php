@@ -15,8 +15,8 @@ class UserLocationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "country_id" => $this->country_id,
-            "governorate_id" => $this->governorate_id,
+            "country_id" => $this->country->description()->name ?? null,
+            "governorate_id" => $this->governorate->description()->name ?? null,
             "latitude" => $this->latitude,
             "longitude" => $this->longitude,
         ];

@@ -32,9 +32,14 @@ class LoginRequet extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(response()->json([
-            "status" => false,
+        $response = [
+            'status' => false,
             'errors' => $validator->errors()->all(),
-        ], 422));
+        ];
+        if ($this->is('api/*')) {
+            throw new HttpResponseException(response()->json($response, 422));
+        } else {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
     }
 }

@@ -21,6 +21,6 @@ class Language extends Model
 
     public function service_descriptions()
     {
-        return $this->hasMany(ServiceDescrition::class,'language_id');
+        return $this->hasMany(ServiceDescription::class,'language_id');
     }
 }

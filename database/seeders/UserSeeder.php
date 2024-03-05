@@ -26,6 +26,12 @@ class UserSeeder extends Seeder
         // Insert into users_authentications table with the obtained user_id
         DB::table('user_authentications')->insert([
             'user_id' => $user_id,
+            'token' => Str::random(64),
+        ]);
+        DB::table('user_locations')->insert([
+            'user_id' => $user_id,
+            'country_id' => 1,
+            'governorate_id' => 1,
         ]);
     }
 }

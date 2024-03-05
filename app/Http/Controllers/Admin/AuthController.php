@@ -23,16 +23,12 @@ class AuthController extends Controller
         ]);
 
         $userLogin = User::where('email', $request->email)->whereIn('role_id', [1, 2])->first();
-        if ($userLogin) {
-            $credentials = $request->only('email', 'password');
-            if (Auth::attempt($credentials)) {
-                return redirect(url('/dashboard/home'));
-            }else{
-                $request->session()->flash('error-msg', 'credentials not correct');
-                return redirect(url('dashboard/login'));
-            }
-        }else{
-            return redirect(url('/'));
+        $credentials = $request->only('email', 'password');
+        if (Auth::attempt($credentials)) {
+            return redirect(url('/dashboard/home'));
+        } else {
+            $request->session()->flash('error-msg', 'credentials not correct');
+            return redirect(url('dashboard/login'));
         }
     }
 

@@ -27,9 +27,8 @@ class RegisterRequest extends FormRequest
             'password' => ['required', 'string','confirmed', 'min:8', 'max:50'],
             'image' => ['nullable', 'image', 'max:5120'],
             'phone' => ['nullable', 'string', 'regex:/^(?:\+20)?(?:01[0-5])[0-9]{8}$/'],
-            'country_id' => ['nullable', 'string', 'exists:countries,id'],
-            'governorate_id' => ['nullable', 'string', 'exists:governorates,id'],
-            'birthday' => ['nullable', 'date', 'before:today'],
+            'country_id' => ['required', 'string', 'exists:countries,id'],
+            'governorate_id' => ['required', 'string', 'exists:governorates,id'],
         ];
         return $rules;
     }
