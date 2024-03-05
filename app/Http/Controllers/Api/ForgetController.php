@@ -16,7 +16,7 @@ class ForgetController extends Controller
 {
     function forget(Request $request)
     {
-        $vaildator = Validator::make($request->all(), [
+        $vaildator = Validator::make($request->only('email'), [
             'email' => 'required|email|exists:users,email',
         ]);
 
@@ -25,14 +25,18 @@ class ForgetController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
-        $otp = random_int(1000, 9999);
-        $userAuth = UserAuthentication::where('user_id',$user->id)->first();
-        $userAuth->update(['otp' => $otp,]);
-        try {
-            Mail::to($request->email)->send(new ForgetPasswordMail($userAuth->otp));
-            return Service::responseMsg('OTP sent successfully');
-        } catch (\Exception $e) {
-            return Service::responseError($e->getMessage(),500);
+        if ($user) {
+            $otp = random_int(1000, 9999);
+            $userAuth = UserAuthentication::where('user_id',$user->id)->first();
+            $userAuth->update(['otp' => $otp,]);
+            try {
+                Mail::to($request->email)->send(new ForgetPasswordMail($userAuth->otp));
+                return Service::responseMsg('OTP sent successfully');
+            } catch (\Exception $e) {
+                return Service::responseError($e->getMessage(),500);
+            }
+        }else{
+            return Service::responseError("Email not found",404);
         }
     }
 
