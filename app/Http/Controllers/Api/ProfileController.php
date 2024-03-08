@@ -13,13 +13,13 @@ class ProfileController extends Controller
     private function getUser(Request $request)
     {
         $token = $request->header('Authorization');
-        return UserAuthentication::where('token', $token)->first();
+        $userAuth = UserAuthentication::where('token', $token)->first();
+        return $userAuth->user;
     }
 
     public function show(Request $request)
     {
         $user = $this->getUser($request);
-
         if ($user) {
             return Service::responseData(new ProfileResource($user), 'Profile');
         } else {
@@ -34,9 +34,6 @@ class ProfileController extends Controller
         if ($user) {
             if ($request->name) {
                 $user->update(['name' => $request->name]);
-            }
-            if ($request->email) {
-                $user->update(['email' => $request->email]);
             }
             if ($request->phone) {
                 $user->update(['phone' => $request->phone]);
