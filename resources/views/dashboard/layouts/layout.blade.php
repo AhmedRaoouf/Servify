@@ -6,7 +6,7 @@
         <link rel="apple-touch-icon" sizes="76x76" href="{{url('')}}/admin/img/apple-icon.png">
         <link rel="icon" type="image/png" href="{{url('')}}/admin/img/favicon.png">
         <title>
-          Servifay dashboard
+          {{__('admin.')}}
         </title>
         <!--     Fonts and icons     -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />

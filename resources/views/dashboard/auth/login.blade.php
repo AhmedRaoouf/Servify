@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="{{ url('') }}/admin/img/apple-icon.png">
     <link rel="icon" type="image/png" href="{{ url('') }}/admin/img/favicon.png">
     <title>
-        Servifay Dashboard
+        {{__('admin.dashboardTitle')}}
     </title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -37,7 +36,8 @@
                         <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
                             <div class="card card-plain">
                                 <div class="card-header pb-0 text-start">
-                                    <h4 class="font-weight-bolder">Sign In</h4>
+                                    {{-- <h4 class="font-weight-bolder">{{__('admins.signIn')}}</h4> --}}
+                                    <h4 class="font-weight-bolder">@lang('admin.signIn')</h4>
                                     <p class="mb-0"></p>
                                 </div>
                                 <div class="card-body">
@@ -46,17 +46,17 @@
                                         @csrf
                                         <div class="mb-3">
                                             <input type="email" class="form-control form-control-lg"
-                                                placeholder="Email" aria-label="Email" name="email">
+                                                placeholder="{{__('admin.email')}}" aria-label="Email" name="email">
                                         </div>
                                         <div class="mb-3">
                                             <input type="password" class="form-control form-control-lg"
-                                                placeholder="Password" aria-label="Password" name="password">
+                                                placeholder="{{__('admin.password')}}" aria-label="Password" name="password">
                                         </div>
 
                                         @include('dashboard.inc.msg')
                                         <div class="text-center">
                                             <button type="submit"
-                                                class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
+                                                class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">{{__('admin.signIn')}}</button>
                                         </div>
                                     </form>
 
@@ -70,9 +70,8 @@
                                 style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg');
           background-size: cover;">
                                 <span class="mask bg-gradient-primary opacity-6"></span>
-                                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Servifay"</h4>
-                                <p class="text-white position-relative">The more effortless the writing looks, the more
-                                    effort the writer actually put into the process.</p>
+                                <h4 class="mt-5 text-white font-weight-bolder position-relative" style="font-size: 50px">"Servifay"</h4>
+                                <p class="text-white position-relative">.</p>
                             </div>
                         </div>
                     </div>

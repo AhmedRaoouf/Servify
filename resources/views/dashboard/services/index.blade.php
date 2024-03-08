@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.container')
 @section('content')
 @section('title')
-    Admins
+    Services
 @endsection
 @section('body-content')
     @if (request()->is('dashboard/services'))

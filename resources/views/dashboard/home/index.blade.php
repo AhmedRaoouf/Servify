@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.container')
 @section('content')
 @section('title')
-    Dashboard
+    {{__('admin.dashboard')}}
 @endsection
 @section('body-content')
     <div class="container-fluid py-4">

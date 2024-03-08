@@ -4,8 +4,9 @@
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-white active" aria-current="page">@yield('title')</li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">{{__("admin.pages")}}</a></li>
+            <li class="breadcrumb-item text-sm text-white active" aria-current="page">    {{__('admin.dashboard')}}
+            </li>
           </ol>
           <h6 class="font-weight-bolder text-white mb-0">@yield('title')</h6>
         </nav>
@@ -24,13 +25,12 @@
               </a>
             </li>
             <li class="nav-item d-flex align-items-center">
-                <h6 class="mb-0">Light / Dark</h6>
-                <div class="form-check form-switch ps-0 ms-auto my-auto">
+                <div class="form-check form-switch px-2 ms-auto my-auto">
                     <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version"
                         onclick="darkMode(this)">
                 </div>
             </li>
-            
+
 
             <li class="nav-item dropdown px-2 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-white p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">

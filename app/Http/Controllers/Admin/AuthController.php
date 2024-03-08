@@ -27,13 +27,14 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             return redirect(url('/dashboard/home'));
         } else {
-            $request->session()->flash('error-msg', 'credentials not correct');
+            session()->flash('error-msg', 'credentials not correct');
             return redirect(url('dashboard/login'));
         }
     }
 
     public function logout()
     {
+        // UserAuthentication::where('user_id',Auth::user()->id)->update(["token" => null]);
         Auth::logout();
         return redirect(route('admin.login'));
     }
