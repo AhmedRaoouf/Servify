@@ -48,7 +48,6 @@ class ProfileController extends Controller
         } else {
             return Service::responseError('User not found', 404);
         }
+        return Service::responseData(new ProfileResource($user), 'Profile');
     }
 }
-
-
