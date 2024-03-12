@@ -3,25 +3,28 @@
         <div class="col-12">
             <div class="card mb-4">
                 <div class="card-header pb-0">
-                    <span class="text-bold">Admins Table</span>
-                    <a class="btn btn-primary" style="float: right" href="{{ url('dashboard/admins/create') }}">Add New
-                        Admin</a>
+                    <span class="text-bold"> {{ __('admin.adminsTable') }} </span>
+                    <a class="btn btn-primary" style="float: right" href="{{ url('dashboard/admins/create') }}">
+                        {{ __('admin.addAdmin') }}
+                    </a>
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-0">
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID
+                                    <th class="text-uppercase text-secondary font-weight-bolder opacity-7">
+                                        {{ __('admin.id') }}
                                     </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name
+                                    <th class="text-uppercase text-secondary font-weight-bolder opacity-7">
+                                        {{ __('admin.name') }}
                                     </th>
-                                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Email</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Phone</th>
-                                    <th class=" text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Actions</th>
+                                    <th class=" text-uppercase text-secondary font-weight-bolder opacity-7">
+                                        {{ __('admin.email') }}</th>
+                                    <th class="text-uppercase text-secondary font-weight-bolder opacity-7">
+                                        {{ __('admin.phone') }}</th>
+                                    <th class=" text-uppercase text-secondary font-weight-bolder opacity-7">
+                                        {{ __('admin.actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,35 +57,45 @@
                                         </td>
                                         <td>
                                             <a class="btn btn-success"
-                                                href="{{ url("dashboard/admins/$admin->id/edit") }}">Edit</a>
+                                                href="{{ url("dashboard/admins/$admin->id/edit") }}">{{ __('admin.edit') }}</a>
                                             <button type="button" class="btn btn-danger deleteModal"
                                                 data-toggle="modal" data-target="#modal{{ $admin->id }}"
                                                 data-id="{{ $admin->id }}" data-name="{{ $admin->name }}">
-                                                Delete
+                                                {{ __('admin.delete') }}
                                             </button>
 
                                         </td>
                                     </tr>
                                     <!-- Modal -->
-                                    <div class="modal fade" id="modal{{ $admin->id }}" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
-                                        aria-hidden="true">
+                                    <div class="modal fade" id="modal{{ $admin->id }}" tabindex="-1" role="dialog"
+                                        aria-labelledby="modalTitle" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalTitle">Delete this Admin?</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <h5 class="modal-title" id="modalTitle">
+                                                        {{ __('admin.deleteAdminMsg') }}
+                                                    </h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Delete Admin : <span class="text-danger font-weight-bold name">{{ $admin->name }}</span>
+                                                    {{ __('admin.deleteAdmin') }}
+                                                    : <span
+                                                        class="text-danger font-weight-bold name">{{ $admin->name }}</span>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                    <form action="{{ url("dashboard/admins/$admin->id") }}" method="POST" style="display: inline">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal"> {{ __('admin.cancel') }}
+                                                    </button>
+                                                    <form action="{{ url("dashboard/admins/$admin->id") }}"
+                                                        method="POST" style="display: inline">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                        <button type="submit" class="btn btn-danger">
+                                                            {{ __('admin.delete') }}
+                                                        </button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -98,4 +111,3 @@
         </div>
     </div>
 </div>
-

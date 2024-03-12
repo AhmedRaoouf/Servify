@@ -30,20 +30,12 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = $this->getUser($request);
-
         if ($user) {
             if ($request->name) {
                 $user->update(['name' => $request->name]);
             }
             if ($request->phone) {
                 $user->update(['phone' => $request->phone]);
-            }
-            if ($request->hasFile('image')) {
-                if ($user->image != null) {
-                    unlink('uploads/' . $user->image);
-                }
-                $userImage = Service::uploadImage($request->file('image'), 'users/');
-                $user->update(['image' => $userImage]);
             }
         } else {
             return Service::responseError('User not found', 404);

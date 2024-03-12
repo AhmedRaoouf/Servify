@@ -16,8 +16,8 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $data["services"] = ServiceDescription::get();
-        return view("dashboard.services.index", $data );
+        $data['services'] = Service::get();
+        return view("dashboard.services.index", $data);
     }
 
     /**
@@ -34,11 +34,21 @@ class ServiceController extends Controller
     public function store(ServiceRequest $request)
     {
         $imageName = Helper::uploadImage($request->image, "services/");
-        $service = Service::create([]);
-        ServiceDescription::create(array_merge($request->validated(), [
+        $service = Service::create([
             "image" => $imageName,
+        ]);
+        ServiceDescription::create([
             "service_id" => $service->id,
-        ]));
+            "language_id" => 1,
+            "name" => $request->name_en,
+            "description" => $request->description_en,
+        ]);
+        ServiceDescription::create([
+            "service_id" => $service->id,
+            "language_id" => 2,
+            "name" => $request->name_ar,
+            "description" => $request->description_ar,
+        ]);
 
         return redirect(url('dashboard/services'));
     }
@@ -54,27 +64,41 @@ class ServiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ServiceDescription $service)
+    public function edit(Service $service)
     {
-        return view("dashboard.services.index",get_defined_vars());
+        return view("dashboard.services.index", get_defined_vars());
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ServiceRequest $request, ServiceDescription $service)
+    public function update(ServiceRequest $request, Service $service)
     {
-        $imageName = Helper::uploadImage($request->image,'services');
-        $service->update(array_merge($request->validated(),[
+        $imageName = Helper::uploadImage($request->image, 'services/');
+
+        $service->update([
             'image' => $imageName ?? $service->image,
-        ]));
-        $service->service->update([
-            'status'=>$request->status,
+            'status' => $request->status,
             'updated_at' => now(),
         ]);
 
+        $service->serviceDescription()
+            ->where('language_id', 1)
+            ->update([
+                'name' => $request->name_en,
+                'description' => $request->description_en,
+            ]);
+
+        $service->serviceDescription()
+            ->where('language_id', 2)
+            ->update([
+                'name' => $request->name_ar,
+                'description' => $request->description_ar,
+            ]);
+
         return redirect(url('dashboard/services'));
     }
+
 
     /**
      * Remove the specified resource from storage.

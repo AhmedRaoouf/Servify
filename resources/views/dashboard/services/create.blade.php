@@ -1,5 +1,6 @@
 
-        <!-- Content Wrapper -->
+
+<!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
             <!-- Main Content -->
@@ -14,44 +15,43 @@
                     <div class="card-body">
 
                     <!-- Page Heading -->
-                    <h3 class="h3 my-3 text-gray-800 ">New Service</h3>
+                    <h3 class="h3 my-3 text-gray-800 ">{{__('admin.newService')}}</h3>
                     @include('dashboard/inc/msg')
 
                     <form method="post" action="{{ url("dashboard/services") }}" enctype="multipart/form-data">
                         @csrf
-
                         <div class="form-group">
-                            <label>Language</label>
-                            <select name="language_id" class="form-control">
-                                <option value="1">English</option>
-                                <option value="2">Arabic</option>
-                            </select>
+                            <label>{{__('admin.name')}} (en)</label>
+                            <input type="text" name="name_en" class="form-control" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label>{{__('admin.name')}} (ar)</label>
+                            <input type="text" name="name_ar" class="form-control" >
                         </div>
 
                         <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" name="name" class="form-control" autofocus>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea name="description" class="form-control" rows="3"></textarea>
+                            <label>{{__('admin.description')}} (en)</label>
+                            <textarea name="description_en" class="form-control" rows="3"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Status</label>
+                            <label>{{__('admin.description')}} (ar)</label>
+                            <textarea name="description_ar" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>{{__('admin.status')}}</label>
                             <select name="status" class="form-control">
-                                <option value="ture">ture</option>
-                                <option value="false">false</option>
+                                <option value="true">{{__('admin.true')}}</option>
+                                <option value="false">{{__('admin.false')}}</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Image</label>
+                            <label>{{__('admin.image')}}</label>
                             <input type="file" name="image">
                         </div>
                         <br>
 
-                        <button type="submit" class="btn btn-primary">Confirm</button>
-                        <a href="{{ url('dashboard/services') }}" class="btn btn-danger">Cancel</a>
+                        <button type="submit" class="btn btn-primary">{{__('admin.confirm')}}</button>
+                        <a href="{{ url('dashboard/services') }}" class="btn btn-danger">{{__('admin.cancel')}}</a>
                     </form>
 
                     </div>

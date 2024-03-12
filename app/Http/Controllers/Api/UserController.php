@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserAuthentication;
 use App\Services\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -13,7 +14,8 @@ class UserController extends Controller
     public function uploadImage(Request $request)
     {
         $token = $request->header('Authorization');
-        $user = User::where('token', $token)->first();
+        $userAuth = UserAuthentication::where('token', $token)->first();
+        $user = $userAuth->user;
         if ($request->image) {
             if ($user->image != null) {
                 unlink('uploads/' . $user->image);

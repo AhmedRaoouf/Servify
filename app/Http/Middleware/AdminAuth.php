@@ -16,8 +16,15 @@ class AdminAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check()) {
-            return $next($request);
+        if (auth()->check()) {
+            $role = Auth::user()->role_id;
+            if (in_array($role, [1, 2])) {
+                return $next($request);
+            } else {
+                Auth::logout();
+                session()->flash('error-msg', 'credentials not correct');
+                return redirect()->route('admin.login');
+            }
         }
 
         return redirect()->route('admin.login');

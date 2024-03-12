@@ -2,7 +2,7 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="#" target="_blank">
-        <img src="{{url('')}}/admin/img/servifay-logo.jpg" class="navbar-brand-img" alt="main_logo" >
+        <img src="{{url("/")}}/admin/img/servifay-logo.jpg" class="navbar-brand-img" alt="main_logo" >
         <span class="ms-1 font-weight-bold">Servifay</span>
       </a>
     </div>
@@ -10,7 +10,8 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link {{ request()->is('dashboard/home') ? 'active' : '' }}" href="{{url('dashboard/home')}}">
+          <a class="nav-link {{ request()->is('dashboard/home') ? 'active' : '' }}" href="{{url(app()->getLocale() . '/dashboard/home') }}">
+
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="fas fa-home text-primary text-sm opacity-10"></i>
             </div>
@@ -19,7 +20,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link {{ request()->is('dashboard/admins') ? 'active' : '' }}" href="{{url('dashboard/admins')}}">
+          <a class="nav-link {{ request()->is('dashboard/admins') ? 'active' : '' }}" href="{{url(app()->getLocale()."/dashboard/admins")}}">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="fas fa-users text-info text-sm opacity-10"></i>
             </div>
@@ -28,7 +29,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link {{ request()->is('dashboard/services') ? 'active' : '' }}" href="{{url('dashboard/services')}}">
+            <a class="nav-link {{ request()->is('dashboard/services') ? 'active' : '' }}" href="{{url(app()->getLocale()."/dashboard/services")}}">
               <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="fas fa-tools text-warning text-sm opacity-10"></i>
             </div>
@@ -48,7 +49,7 @@
           </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('dashboard/logout') }}">
+            <a class="nav-link" href="{{ url(app()->getLocale()."/dashboard/logout") }}">
                 <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                     <i class="fas fa-sign-out-alt text-dark text-sm opacity-10"></i>
                 </div>

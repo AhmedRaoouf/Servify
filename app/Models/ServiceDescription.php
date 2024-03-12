@@ -12,7 +12,6 @@ class ServiceDescription extends Model
     protected $fillable = [
         'name',
         'description',
-        'image',
         'service_id',
         'language_id',
     ];
