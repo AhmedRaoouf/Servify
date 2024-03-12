@@ -37,6 +37,7 @@ Route::middleware(['lang'])->group(function (){
         Route::post('/logout', [AuthController::class, 'logout']);
         // Users
         Route::post('user/image/update', [UserController::class, 'uploadImage']);
+        Route::post('user/password/update', [UserController::class, 'updatePassword']);
         //profile
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::patch('/profile/update', [ProfileController::class, 'update']);

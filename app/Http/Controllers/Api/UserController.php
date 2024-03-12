@@ -7,27 +7,52 @@ use App\Models\User;
 use App\Models\UserAuthentication;
 use App\Services\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
     public function uploadImage(Request $request)
     {
-        $token = $request->header('Authorization');
-        $userAuth = UserAuthentication::where('token', $token)->first();
-        $user = $userAuth->user;
-        if ($request->image) {
-            if ($user->image != null) {
-                unlink('uploads/' . $user->image);
-                $userImage = service::uploadImage($request->image, 'users/');
-                $user->update(['image' => $userImage]);
+        $user = UserAuthentication::where('token', $request->header('Authorization'))->first()->user;
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->first()], 422);
+        }
+
+        if ($user->image != null) {
+            unlink('uploads/' . $user->image);
+        }
+        $userImage = service::uploadImage($request->file('image'), 'users/');
+        $user->update(['image' => $userImage]);
+        return Service::responseData(['image' => asset("uploads/$userImage")], 'Image updated successfully');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user = UserAuthentication::where('token', $request->header('Authorization'))->first()->user;
+        $validator = Validator::make($request->all(), [
+            'old_password' => ['required', 'string', 'min:8', 'max:50'],
+            'password' => ['required', 'string', 'min:8', 'max:50', 'confirmed'],
+        ]);
+
+        if ($validator->fails()) {
+            return Service::responseError($validator->errors(), 422);
+        }
+        if (Hash::check($request->old_password, $user->password)) {
+            if (!Hash::check($request->password, $user->password)) {
+                $user->update(['password' => $request->password]);
+                return Service::responseMsg("Your password updated successfully");
             } else {
-                $userImage = service::uploadImage($request->image, 'users/');
-                $user->update(['image' => $userImage]);
+                return Service::responseMsg("New password must be different from the previous password");
             }
-            return Service::responseData(['image' => asset("uploads/$userImage")], 'Image updated successfully');
         } else {
-            return Service::responseMsg('No image uploaded.');
+            return  Service::responseError("The old password is incorrect.", 401);
         }
     }
+
 }
