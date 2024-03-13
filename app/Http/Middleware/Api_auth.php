@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\UserAuthentication;
+use App\Services\Service;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,22 +17,16 @@ class Api_auth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $token =$request->header('Authorization');
-        if($token !== null)
-        {
-            $user = UserAuthentication::where('token',"=",$token)->first();
-            if($user !==null)
-            {
+        $token = $request->header('Authorization');
+
+        if ($token !== null) {
+            $user = UserAuthentication::where('token', $token)->first();
+
+            if ($user !== null) {
                 return $next($request);
-            }else{
-                return response()->json([
-                    'message'=>"token not valid"
-                ]);
             }
-        }else{
-            return response()->json([
-                'message'=>"token not sent"
-            ]);
         }
+
+        Service::responseError("Unauthorized", 401);
     }
 }

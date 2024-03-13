@@ -41,5 +41,6 @@ Route::middleware(['lang'])->group(function (){
         //profile
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::patch('/profile/update', [ProfileController::class, 'update']);
+        //location
     });
 });
