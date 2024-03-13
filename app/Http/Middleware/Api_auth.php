@@ -27,6 +27,6 @@ class Api_auth
             }
         }
 
-        Service::responseError("Unauthorized", 401);
+        return Service::responseError("Unauthorized", 401);
     }
 }
