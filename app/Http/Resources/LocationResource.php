@@ -16,8 +16,8 @@ class LocationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'country' => $this->description()->pluck('id','name')->toArray(),
-            'governorate' => $this->governorateDescriptions()->pluck('id','name')->toArray()
+            'country' => $this->description()->pluck('country_id','name')->toArray(),
+            'governorate' => $this->governorateDescriptions()->pluck('governorate_id','name')->toArray()
         ];
 
     }
