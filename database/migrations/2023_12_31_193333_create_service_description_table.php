@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->foreignId('service_id')->constrained('services')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('service_id')->constrained('services')->nullOnDelete()->cascadeOnUpdate();
             $table->foreignId('language_id')->constrained('languages')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
