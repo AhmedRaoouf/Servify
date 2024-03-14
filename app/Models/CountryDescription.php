@@ -14,4 +14,6 @@ class CountryDescription extends Model
         'language_id'
     ];
 
+    
+
 }

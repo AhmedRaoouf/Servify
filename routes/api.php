@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ForgetController;
+use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,8 @@ Route::middleware(['lang'])->group(function (){
     Route::post('/forget', [ForgetController::class, 'forget']);
     Route::post('/otp/{otp}', [ForgetController::class, 'otp']);
     Route::post('/reset/{otp}', [ForgetController::class, 'reset']);
+
+    Route::get('/county/{country}/governorate',[LocationController::class,'show']);
 
     Route::middleware(['api_auth','api_authVerify'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);

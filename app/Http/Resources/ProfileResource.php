@@ -16,16 +16,15 @@ class ProfileResource extends JsonResource
     public function toArray(Request $request): array
     {
         $location = UserLocation::where('user_id', $this->id)->first();
-
         return [
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
             'gender' => $this->gender,
             'image' => $this->image ? asset('uploads') . "/$this->image" : 'Not Found',
-            "country" => $location->country->description()->name ?? null,
-            "governorate" => $location->governorate->description()->name ?? null,
-
+            "country" => $location->country ? $location->country->description()->name : null,
+            "governorate" => $location->governorate ? $location->governorate->description()->name : null,
         ];
+
     }
 }
