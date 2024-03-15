@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Models\GovernorateDescription;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LocationResource extends JsonResource
+class CountryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +15,9 @@ class LocationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'country' => $this->description()->pluck('country_id','name')->toArray(),
-            'governorate' => $this->governorateDescriptions()->pluck('governorate_id','name')->toArray()
+            'id' => $this->id,
+            'name_en' => $this->description(1)?->name,
+            'name_ar' => $this->description(2)?->name,
         ];
-
     }
 }

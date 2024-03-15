@@ -15,17 +15,23 @@ class Country extends Model
         return $this->hasMany(User::class);
     }
 
-    public function governorateDescriptions()
+    public function  governoratesDescription($language_id = null,$country_id=null)
     {
-        return $this->hasMany(GovernorateDescription::class);
+        $language_id = $language_id ?: currentLanguage()->id;
+        return $this->hasMany(GovernorateDescription::class)
+        ->where('language_id', $language_id)
+        ->where('country_id',$country_id)
+        ->get();
     }
 
     public function description($language_id = null)
     {
         $language_id = $language_id ?: currentLanguage()->id;
-        return $this->hasMany(CountryDescription::class)->where('language_id', $language_id)->first();
+        return $this->hasMany(CountryDescription::class)
+        ->where('language_id', $language_id)
+        ->select('name','country_id')
+        ->first();
     }
-
 
     public function withDescription($country_id = null)
     {

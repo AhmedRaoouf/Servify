@@ -33,9 +33,10 @@ Route::middleware(['lang'])->group(function (){
     Route::post('/forget', [ForgetController::class, 'forget']);
     Route::post('/otp/{otp}', [ForgetController::class, 'otp']);
     Route::post('/reset/{otp}', [ForgetController::class, 'reset']);
-    
+
     //location
-    Route::get('/county/{country}/governorate',[LocationController::class,'show']);
+    Route::get('/countries',[LocationController::class,'getCountries']);
+    Route::get('/county/{country}/governorate',[LocationController::class,'getGovernorates']);
 
     Route::middleware(['api_auth','api_authVerify'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
