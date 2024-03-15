@@ -22,8 +22,8 @@ class ProfileResource extends JsonResource
             'phone' => $this->phone,
             'gender' => $this->gender,
             'image' => $this->image ? asset('uploads') . "/$this->image" : 'Not Found',
-            "country" => $location->country->description()->name ?? null,
-            "governorate" => $location->governorate->description()->name ?? null,
+            "country" => $location->country_id ? $location->country->description()->name : null,
+            "governorate" => $location->governorate_id ? $location->governorate->description()->name : null,
         ];
     }
 }
