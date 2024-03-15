@@ -15,8 +15,8 @@ class GovernorateDescription extends Model
         'language_id'
     ];
 
-    public function country()
+    public function governorate()
     {
-        return $this->belongsTo(Country::class);
+        return $this->belongsTo(Governorate::class);
     }
 }

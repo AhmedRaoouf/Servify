@@ -15,12 +15,13 @@ class Country extends Model
         return $this->hasMany(User::class);
     }
 
-    public function  governoratesDescription($language_id = null,$country_id=null)
+    public function  governoratesDescription($country_id=null,$language_id = null)
     {
         $language_id = $language_id ?: currentLanguage()->id;
         return $this->hasMany(GovernorateDescription::class)
         ->where('language_id', $language_id)
         ->where('country_id',$country_id)
+        ->select('name','governorate_id')
         ->get();
     }
 
@@ -33,17 +34,4 @@ class Country extends Model
         ->first();
     }
 
-    public function withDescription($country_id = null)
-    {
-        $language_id = currentLanguage()->id;
-
-        $query = self::join('country_descriptions As cd', 'cd.country_id', 'countries.id')
-            ->where('cd.language_id', $language_id)
-            ->select('countries.*', 'cd.name');
-
-        if ($country_id) {
-            $query->whereIn('countries.id', $country_id);
-        }
-        return  $query;
-    }
 }

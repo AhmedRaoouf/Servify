@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\GovernorateResource;
 use App\Models\Country;
+use App\Models\GovernorateDescription;
 use App\Services\Service;
 use Illuminate\Http\Request;
 
@@ -19,11 +20,11 @@ class LocationController extends Controller
 
     public function getGovernorates(Country $country)
     {
-        if ($country) {
-            return Service::responseData(new GovernorateResource($country), 'governorate');
-        } else {
-            return Service::responseError('Country not found', 404);
-        }
+        $governorates = $country->governoratesDescription($country->id);
+        return Service::responseData([
+            'country' => new CountryResource($country),
+            'governorate' => GovernorateResource::collection($governorates),
+        ]);
 
     }
 }

@@ -89,6 +89,9 @@ class AuthController extends Controller
         try {
             $firebase = Firebase::auth();
             $userData = $firebase->getUser($uid);
+            if ($userData === null) {
+                throw new UserNotFound('User not found.');
+            }
             $user = User::where('email', $userData->email)->first();
             $token = Str::random(64);
             if ($user != null) {
@@ -110,6 +113,7 @@ class AuthController extends Controller
                     'google_id' => $userData->providerData[0]->uid,
                     'email_verified_at' => now(),
                 ]);
+                
 
                 return service::responseData(new UserResource($user), 'You are successfully registered');
             }

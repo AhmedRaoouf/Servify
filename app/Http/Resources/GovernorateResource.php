@@ -15,9 +15,8 @@ class GovernorateResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'country' => new CountryResource($this),
-            'governorates_en' => $this->governoratesDescription(1,$this->description()->country_id)->pluck('governorate_id','name')->toArray(),
-            'governorates_ar' => $this->governoratesDescription(2,$this->description()->country_id)->pluck('governorate_id','name')->toArray(),
+            'id' => $this->governorate->id,
+            'name' => $this->governorate->description()?->name,
         ];
     }
 }
