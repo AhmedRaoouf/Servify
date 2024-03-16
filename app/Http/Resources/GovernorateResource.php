@@ -15,8 +15,8 @@ class GovernorateResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->governorate->id,
-            'name' => $this->governorate->description()?->name,
+            'id' => $this->governorate_id,
+            'name' => $this->name,
         ];
     }
 }

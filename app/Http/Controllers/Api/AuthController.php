@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LocationRequest;
 use App\Http\Requests\LoginRequet;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
@@ -14,6 +15,7 @@ use App\Models\UserLocation;
 use App\Services\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -84,7 +86,8 @@ class AuthController extends Controller
         return service::responseError('Invalid token', 404);
     }
 
-    public function handleGoogleLogin(Request $request, string $uid)
+
+    public function handleSocialLogin(LocationRequest $request, string $provider, string $uid)
     {
         try {
             $firebase = Firebase::auth();
@@ -92,9 +95,11 @@ class AuthController extends Controller
             if ($userData === null) {
                 throw new UserNotFound('User not found.');
             }
+
             $user = User::where('email', $userData->email)->first();
             $token = Str::random(64);
-            if ($user != null) {
+
+            if ($user !== null) {
                 $userAuth = UserAuthentication::where('user_id', $user->id)->first();
                 $userAuth->token = $token;
                 $userAuth->save();
@@ -107,57 +112,39 @@ class AuthController extends Controller
                     'password' => $userData->uid . now(),
                     'role_id' => Role::where('name', 'user')->value('id'),
                 ]);
-                $userAuth = UserAuthentication::create([
+                UserLocation::create([
+                    'user_id'   => $newuser->id,
+                    'country_id' => $request->country_id,
+                    'governorate_id' => $request->governorate_id,
+                    'longitude' => $request->longitude,
+                    'latitude' => $request->latitude,
+                ]);
+                $userAuthData = [
                     'user_id'   => $newuser->id,
                     'token'  => $token,
-                    'google_id' => $userData->providerData[0]->uid,
                     'email_verified_at' => now(),
-                ]);
-                
+                ];
 
-                return service::responseData(new UserResource($user), 'You are successfully registered');
+                if ($provider === 'google') {
+                    $userAuthData['google_id'] = optional($userData->providerData[0])->uid;
+                } elseif ($provider === 'facebook') {
+                    $userAuthData['facebook_id'] = optional($userData->providerData[0])->uid;
+                }
+
+                $userAuth = UserAuthentication::create($userAuthData);
+
+
+
+                return service::responseData(new UserResource($newuser), 'You are successfully registered');
             }
         } catch (UserNotFound $e) {
             return response()->json(['error' => $e->getMessage()], 404);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['error' => 'An error occurred. Please try again later.'], 500);
         }
     }
 
-    public function handleFacebookLogin(Request $request, string $uid)
-    {
-        try {
-            $firebase = Firebase::auth();
-            $userData = $firebase->getUser($uid);
-            $user = User::where('email', $userData->email)->first();
-            $token = Str::random(64);
-
-            if ($user != null) {
-                $userAuth = UserAuthentication::where('user_id', $user->id)->first();
-                $userAuth->token = $token;
-                $userAuth->save();
-                Auth::login($user);
-                return service::responseData(new UserResource($user), 'Login successful');
-            }else{
-
-                $newuser = User::create([
-                    'name' => $userData->displayName,
-                    'email' => $userData->email,
-                    'password' => $userData->uid . now(),
-                    'role_id' => Role::where('name', 'user')->value('id'),
-
-                ]);
-                $userAuth = UserAuthentication::create([
-                    'user_id'   => $newuser->id,
-                    'token'  => $token,
-                    'facebook_id' => $userData->providerData[0]->uid,
-                    'email_verified_at' => now(),
-                ]);
-
-                return service::responseData(new UserResource($user), 'You are successfully registered');
-            }
-        } catch (UserNotFound $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
-        }
-    }
 
 
     public function sendVerificationCode(Request $request)
@@ -173,7 +160,7 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->input('email'))->first();
-        $userAuth = UserAuthentication::where('user_id',$user->id)->first();
+        $userAuth = UserAuthentication::where('user_id', $user->id)->first();
         if (!$userAuth->email_verified_at) {
             $code = random_int(1000, 9999);
 
@@ -233,5 +220,4 @@ class AuthController extends Controller
             'message' => 'Email activated successfully'
         ]);
     }
-
 }

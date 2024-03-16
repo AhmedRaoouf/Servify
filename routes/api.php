@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ForgetController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,12 +20,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Authentication
-Route::middleware(['lang'])->group(function (){
+Route::middleware(['lang'])->group(function () {
 
     Route::post("/register", [AuthController::class, "register"]);
     Route::post("/login", [AuthController::class, "login"]);
-    Route::get('login/google/callback/{uid}', [AuthController::class, "handleGoogleLogin"]);
-    Route::get('login/facebook/callback/{uid}', [AuthController::class, "handleFacebookLogin"]);
+    //Login with provider like facebook or google
+    Route::post('login/{provider}/callback/{uid}', [AuthController::class, "handleSocialLogin"]);
+
 
     Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
     Route::post('/verify-email/{code}', [AuthController::class, 'verify']);
@@ -35,10 +37,10 @@ Route::middleware(['lang'])->group(function (){
     Route::post('/reset/{otp}', [ForgetController::class, 'reset']);
 
     //location
-    Route::get('/countries',[LocationController::class,'getCountries']);
-    Route::get('/county/{country}/governorate',[LocationController::class,'getGovernorates']);
+    Route::get('/countries', [LocationController::class, 'getCountries']);
+    Route::get('/county/{country}/governorate', [LocationController::class, 'getGovernorates']);
 
-    Route::middleware(['api_auth','api_authVerify'])->group(function () {
+    Route::middleware(['api_auth', 'api_authVerify'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         // Users
         Route::post('user/image/update', [UserController::class, 'uploadImage']);
@@ -46,5 +48,9 @@ Route::middleware(['lang'])->group(function (){
         //profile
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::patch('/profile/update', [ProfileController::class, 'update']);
+        //Services
+        Route::get('/services', [ServiceController::class, "index"]);
+        //Home
+
     });
 });

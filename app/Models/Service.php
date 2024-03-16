@@ -9,31 +9,30 @@ class Service extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'id','status','image',
+        'id', 'status', 'image',
     ];
-    public function serviceDescription()
-    {
-        return $this->hasMany(ServiceDescription::class,'service_id');
-    }
+
     public function description($language_id = null)
     {
         $language_id = $language_id ?: currentLanguage()->id;
         return $this->hasMany(ServiceDescription::class)->where('language_id', $language_id)->first();
     }
 
-    public function withDescription($service_id=null)
+    public function withDescription($service_id = null)
     {
         $language_id = currentLanguage()->id;
 
-        $query = self::join('service_descriptions As sd','sd.service_id','services.id')
-        ->where('sd.language_id',$language_id)
-        ->select('services.*','sd.name');
+        $query = self::join('service_descriptions AS sd', 'sd.service_id', '=', 'services.id')
+            ->where('sd.language_id', $language_id)
+            ->select('services.id', 'services.status', 'services.image', 'sd.name', 'sd.description');
 
-        if ($service_id) {
-            $query->whereIn( 'services.id' ,$service_id);
+        if ($service_id !== null) {
+            $query->whereIn('services.id', (array) $service_id);
         }
-        return  $query;
+
+        return $query;
     }
+
 
     public function users()
     {

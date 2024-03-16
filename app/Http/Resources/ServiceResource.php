@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserLocationResource extends JsonResource
+class ServiceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,11 @@ class UserLocationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "country" => $this->country->description()?->name,
-            "governorate" => $this->governorate->description()?->name,
-            "latitude" => $this->latitude,
-            "longitude" => $this->longitude,
+            'id' => $this->id,
+            'name' => $this->description()?->name,
+            'description' => $this->description()?->description,
+            'image' => $this->image ? asset('uploads') . "/$this->image" : 'Not Found',
+            'status' =>$this->status,
         ];
     }
 }

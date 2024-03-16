@@ -25,7 +25,6 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'birthday' => $this->birthday,
             'role' => Role::where('id', $this->role_id)->value('name'),
             'image' => $this->image ? asset('uploads') . "/$this->image" : 'Not Found',
             'user_auth' => new UserAuthResource( $auth ),
