@@ -87,7 +87,7 @@ class AuthController extends Controller
     }
 
 
-    public function handleSocialLogin(LocationRequest $request, string $provider, string $uid)
+    public function handleSocialLogin(Request $request, string $provider, string $uid)
     {
         try {
             $firebase = Firebase::auth();
