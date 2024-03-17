@@ -27,7 +27,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             return redirect(url('/dashboard/home'));
         } else {
-            session()->flash('error-msg', 'credentials not correct');
+            session()->flash('error-msg', __('messages.credentials_not_correct'));
             return redirect(url('dashboard/login'));
         }
     }

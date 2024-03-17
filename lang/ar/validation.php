@@ -199,7 +199,6 @@ return [
         'image' => 'الصورة',
         'country_id' => 'الدوله',
         'governorate_id' => 'المدينه',
-
     ],
 
 ];
