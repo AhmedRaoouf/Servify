@@ -8,15 +8,22 @@ class Service
     public static function uploadImage($image, $subdirectory)
     {
         if ($image) {
-            $ext = $image->getClientOriginalExtension();
-            $imageName = '' . uniqid() . '.' . $ext;
-            $destination = public_path('uploads/' . $subdirectory);
-            $image->move($destination, $imageName);
+            $img = Image::make($image->getRealPath());
+            $img->resize(800, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            $destinationPath = public_path('uploads/' . $subdirectory);
+            $imageName = uniqid() . '.webp';
+            $img->encode('webp', 80)->save($destinationPath . '/' . $imageName);
+
             return $subdirectory . $imageName;
-        } else {
-            return null;
         }
+
+        return null;
     }
+
 
     public static function responseError($msg, $statusCode)
     {
