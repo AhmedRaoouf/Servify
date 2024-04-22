@@ -8,7 +8,7 @@ if (!function_exists('currentLanguage')) {
      * Return Current Language from datebase
      * @return mixed
      */
-    function currentLanguage()
+    function currentLanguage():mixed
     {
         $language = Language::where('local', LaravelLocalization::getCurrentLocale())->first();
         return $language;

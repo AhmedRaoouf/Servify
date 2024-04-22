@@ -22,13 +22,13 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         $rules =  [
-            'name' => ['required', 'string','min:5', 'max:255', 'regex:/^[A-Za-z0-9_ ]+$/',],
+            'name' => ['required', 'string','min:3', 'max:255', 'regex:/^[A-Za-z0-9_ ]+$/',],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string','confirmed', 'min:8', 'max:50'],
             'image' => ['nullable', 'image', 'max:5120'],
             'phone' => ['nullable', 'string', 'regex:/^(?:\+20)?(?:01[0-5])[0-9]{8}$/'],
-            'country_id' => ['required', 'string', 'exists:countries,id'],
-            'governorate_id' => ['required', 'string', 'exists:governorates,id'],
+            'country_id' => ['required', 'exists:countries,id'],
+            'governorate_id' => ['required', 'exists:governorates,id'],
         ];
         return $rules;
     }

@@ -21,7 +21,7 @@
                         @method("PUT")
                         <div class="form-group">
                             <label>{{__('admin.name')}} (en)</label>
-                            <input type="text" name="name_en" value="{{$service->description(1)->name}}" class="form-control" autofocus>
+                            <input type="text" name="name_en"  value="{{$service->description(1)->name}}" class="form-control" autofocus>
                         </div>
                         <div class="form-group">
                             <label>{{__('admin.name')}} (ar)</label>

@@ -25,7 +25,7 @@ class AdminRequest extends FormRequest
         $rules = [
             'name' => ['required', 'string'],
             'email' => ['required','email',Rule::unique('users')->ignore($this->admin? $this->admin->id : 0, 'id')],
-            'phone' => ['nullable', 'numeric'],
+            'phone' => ['nullable', 'string', 'regex:/^[\d\+\(\)\-\s]+$/'],
             'image' =>  ['nullable','image']
         ];
         if ($this->filled('password') && isset($this->admin)) {
@@ -34,12 +34,12 @@ class AdminRequest extends FormRequest
         elseif (!isset($this->admin)) {
             $rules['password'] = ['required', 'min:8'];
         }
-        if ($this->image && isset($this->admin)) {
-            $rules['image'] = ['sometimes', 'image'];
-        }
-        elseif (!isset($this->admin)) {
-            $rules['image'] = ['required', 'image'];
-        }
+        // if ($this->image && isset($this->admin)) {
+        //     $rules['image'] = ['sometimes', 'image'];
+        // }
+        // elseif (!isset($this->admin)) {
+        //     $rules['image'] = ['required', 'image'];
+        // }
         return  $rules ;
     }
 }

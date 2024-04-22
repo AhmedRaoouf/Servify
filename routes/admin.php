@@ -18,8 +18,8 @@ Route::group(["prefix" => LaravelLocalization::setLocale()], function () {
             Route::get('/change-language/{locale}', [LocalizationController::class,'changeLanguage'])->name('change.language');
 
             Route::get("/home", [HomeController::class, "index"]);
-            Route::resource('admins', AdminController::class);
-            Route::resource('services', ServiceController::class);
+            Route::resource('admins', AdminController::class)->except(["show"]);
+            Route::resource('services', ServiceController::class)->except(["show"]);
         });
     });
 });

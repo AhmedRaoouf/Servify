@@ -54,14 +54,6 @@ class ServiceController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Service $service)
@@ -75,27 +67,20 @@ class ServiceController extends Controller
     public function update(ServiceRequest $request, Service $service)
     {
         $imageName = Helper::uploadImage($request->image, 'services/');
-
+        $serviceDescription = ServiceDescription::where('service_id',$service->id)->get();
         $service->update([
             'image' => $imageName ?? $service->image,
             'status' => $request->status,
             'updated_at' => now(),
         ]);
-
-        $service->serviceDescription()
-            ->where('language_id', 1)
-            ->update([
-                'name' => $request->name_en,
-                'description' => $request->description_en,
-            ]);
-
-        $service->serviceDescription()
-            ->where('language_id', 2)
-            ->update([
-                'name' => $request->name_ar,
-                'description' => $request->description_ar,
-            ]);
-
+        $serviceDescription[0]->update([
+            'name'=>$request->name_en,
+            'description'=>$request->description_en,
+        ]);
+        $serviceDescription[1]->update([
+            'name'=>$request->name_ar,
+            'description'=>$request->description_ar,
+        ]);
         return redirect(url('dashboard/services'));
     }
 
@@ -103,8 +88,9 @@ class ServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Service $service)
     {
-        //
+        $service->delete();
+        return redirect(route('services.index'));
     }
 }

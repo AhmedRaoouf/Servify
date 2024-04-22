@@ -37,18 +37,11 @@ class AdminController extends Controller
             'role_id' => 2,
             'image' => $imageName,
         ]));
-        $userAuth = UserAuthentication::create([
+        UserAuthentication::create([
             'user_id' => $user->id,
             'email_verified_at' => now(),
         ]);
         return redirect(url('dashboard/admins'));
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
     }
 
     /**
@@ -72,8 +65,6 @@ class AdminController extends Controller
             'password' => $request->password ?? $admin->password,
             'image'    => $imageName ?? $admin->image,
         ]);
-
-
         return redirect(url('dashboard/admins'));
     }
 

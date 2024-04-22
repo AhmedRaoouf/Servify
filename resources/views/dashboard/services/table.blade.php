@@ -52,7 +52,7 @@
                                         </td>
                                         <td>
                                             <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm">{{ $service->status ? __('admin.true'): __('admin.false')}}</h6>
+                                                <h6 class="mb-0 text-sm">{{ $service->status == 'true' ? __('admin.true'): __('admin.false')}}</h6>
                                             </div>
                                         </td>
                                         <td>
