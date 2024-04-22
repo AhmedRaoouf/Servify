@@ -66,8 +66,16 @@ class ServiceController extends Controller
      */
     public function update(ServiceRequest $request, Service $service)
     {
-        $imageName = Helper::uploadImage($request->image, 'services/');
         $serviceDescription = ServiceDescription::where('service_id',$service->id)->get();
+        $oldImage = $service->image;
+        $imageName = Helper::uploadImage($request->image,'services/');
+        if ($imageName && $oldImage) {
+            $oldImagePath = public_path('uploads/' . $oldImage);
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+        }
+
         $service->update([
             'image' => $imageName ?? $service->image,
             'status' => $request->status,

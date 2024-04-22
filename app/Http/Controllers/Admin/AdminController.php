@@ -32,7 +32,7 @@ class AdminController extends Controller
      */
     public function store(AdminRequest $request)
     {
-        $imageName = Service::uploadImage($request->image, 'users/');
+        $imageName = Service::uploadImage($request->image, 'users\\');
         $user = User::create(array_merge($request->validated(), [
             'role_id' => 2,
             'image' => $imageName,
@@ -57,7 +57,17 @@ class AdminController extends Controller
      */
     public function update(AdminRequest $request, User $admin)
     {
+
+        $oldImage = $admin->image;
         $imageName = Service::uploadImage($request->image, 'users/');
+        if ($imageName && $oldImage) {
+            $oldImagePath = public_path('uploads/' . $oldImage);
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+        }
+
+        // Update the user's information
         $admin->update([
             'name'     => $request->name,
             'email'    => $request->email,
@@ -65,8 +75,10 @@ class AdminController extends Controller
             'password' => $request->password ?? $admin->password,
             'image'    => $imageName ?? $admin->image,
         ]);
+
         return redirect(url('dashboard/admins'));
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -76,6 +88,5 @@ class AdminController extends Controller
         $user = User::withTrashed()->findOrFail($id);
         $user->deleted_at ? $user->restore() : $user->delete();
         return redirect()->route('admins.index');
-
     }
 }

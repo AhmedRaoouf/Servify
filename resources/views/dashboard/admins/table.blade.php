@@ -38,10 +38,10 @@
                                                 <div>
                                                     @if ($admin->image)
                                                         <img src="{{ url('') }}/uploads/{{ $admin->image }}"
-                                                            class="avatar avatar-sm me-3" alt="user1">
+                                                            class="avatar avatar-sm me-3">
                                                     @else
                                                         <img src="{{ url('') }}/uploads/users/defualt.jpg"
-                                                            class="avatar avatar-sm me-3" alt="user1">
+                                                            class="avatar avatar-sm me-3">
                                                     @endif
                                                 </div>
                                                 <div class="d-flex flex-column justify-content-center">
