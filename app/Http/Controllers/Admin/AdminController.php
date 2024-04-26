@@ -32,7 +32,7 @@ class AdminController extends Controller
      */
     public function store(AdminRequest $request)
     {
-        $imageName = Service::uploadImage($request->image, 'users\\');
+        $imageName = Service::uploadImage($request->image, 'users/');
         $user = User::create(array_merge($request->validated(), [
             'role_id' => 2,
             'image' => $imageName,
