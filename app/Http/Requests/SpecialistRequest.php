@@ -25,13 +25,13 @@ class SpecialistRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'service_id' => 'required|exists:services,id',
             'average_rating' => 'nullable|numeric|min:0|max:5',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'num_of_experience' => 'nullable|integer|min:0',
             'num_of_customers' => 'nullable|integer|min:0',
             'earning' => 'nullable|integer|min:0',
-            'personal_card' => 'required|array',
-            'personal_card.*' => 'required|image|mimes:jpeg,png,jpg,gif',
-            'personal_image' => 'required|image',
+            'personal_card' => 'nullable|array',
+            'personal_card.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'personal_image' => 'nullable|image',
         ];
     }
 }
