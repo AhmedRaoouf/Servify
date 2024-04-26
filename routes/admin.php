@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\LocalizationController;
+use App\Http\Controllers\Admin\SpecialistController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -18,8 +19,10 @@ Route::group(["prefix" => LaravelLocalization::setLocale()], function () {
             Route::get('/change-language/{locale}', [LocalizationController::class,'changeLanguage'])->name('change.language');
 
             Route::get("/home", [HomeController::class, "index"]);
-            Route::resource('admins', AdminController::class)->except(["show"]);
-            Route::resource('services', ServiceController::class)->except(["show"]);
+            Route::resource('admins', AdminController::class);
+            Route::resource('services', ServiceController::class);
+            Route::resource('specialists',SpecialistController::class);
+            Route::post('specialists/{specialist}/activate', [SpecialistController::class, 'activate'])->name('specialists.activate');
         });
     });
 });

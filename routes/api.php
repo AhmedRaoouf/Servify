@@ -5,7 +5,9 @@ use App\Http\Controllers\Api\ForgetController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\SpecialistController;
 use App\Http\Controllers\Api\UserController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,7 +52,9 @@ Route::middleware(['lang'])->group(function () {
         Route::patch('/profile/update', [ProfileController::class, 'update']);
         //Services
         Route::get('/services', [ServiceController::class, "index"]);
-        //Home
-
+        Route::get('/services/{service}',[ServiceController::class,'showAll']);
+        //Specialists
+        Route::apiResource('specialist', SpecialistController::class);
+        Route::post('specialist/{specialist_id}/rating', [SpecialistController::class, 'rating']);
     });
 });

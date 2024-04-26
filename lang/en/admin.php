@@ -17,6 +17,7 @@ return[
     'logout'=>'Log Out',
     //Actions
     'edit' => 'Edit',
+    'show' => 'Show',
     'delete' => 'Delete',
     'cancel' => 'Cancel',
     //Admin Page
@@ -35,6 +36,7 @@ return[
     'editAdmin' => 'Edit Admin',
     //service page
     'services' => 'Services',
+    'service' => 'Service',
     'servicesTable' => 'Services Table',
     'addService' => 'Add New Service',
     'description' => 'Description',
@@ -43,6 +45,22 @@ return[
     'true' => 'True',
     'false' => 'False',
 
-
-
+    //specialists Page
+    'specialists' => 'Specialists',
+    'specialistsTable' => 'Specialists Table',
+    'newSpecialist' =>'Add new Specialist',
+    'addSpecialist' => 'Add Specialist' ,
+    'editSpecialist' => 'Edit Specialist',
+    'deleteSpecialist' => 'Delete Specialist',
+    'showSpecialist' => 'Show Specialist',
+    'average_rating' => 'Average Rating',
+    'rating' => 'Rating',
+    'user' => 'User',
+    'earning' => 'Earning',
+    'num_of_years_experience' => 'Number of years experience',
+    'num_of_customers' => 'Number of customers',
+    "personalCard" => "Personal card",
+    'notUploaded' => 'No Files Uploaded Yet.',
+    'active' => 'Active',
+    'personalImage' => 'Personal image',
 ];

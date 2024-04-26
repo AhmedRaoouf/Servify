@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_service_reviews', function (Blueprint $table) {
+        Schema::create('specialist_reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('service_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->tinyInteger('rating');
-            $table->text('comment')->nullable();
+            $table->foreignId('specialist_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->unsignedTinyInteger('rating')->default(0);
+            $table->text('review')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_service_reviews');
+        Schema::dropIfExists('specialist_reviews');
     }
 };

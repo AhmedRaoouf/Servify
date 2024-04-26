@@ -57,7 +57,6 @@ class AdminController extends Controller
      */
     public function update(AdminRequest $request, User $admin)
     {
-
         $oldImage = $admin->image;
         $imageName = Service::uploadImage($request->image, 'users/');
         if ($imageName && $oldImage) {
@@ -78,7 +77,6 @@ class AdminController extends Controller
 
         return redirect(url('dashboard/admins'));
     }
-
 
     /**
      * Remove the specified resource from storage.

@@ -98,7 +98,13 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        $service->delete();
+        if ($service->image){
+            $oldImagePath = public_path('uploads/' . $service->image);
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+        }
+        $service->deleted_at ? $service->restore() : $service->delete();
         return redirect(route('services.index'));
     }
 }

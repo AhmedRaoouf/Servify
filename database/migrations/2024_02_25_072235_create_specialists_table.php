@@ -15,8 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('service_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->decimal('average_rating',2,1);
+            $table->decimal('average_rating', 2, 1)->default(0);
+            $table->text('description')->nullable();
+            $table->integer('num_of_experience')->default(0);
+            $table->integer('num_of_customers')->default(0);
+            $table->integer('earning')->default(0);
+            $table->json('personal_card')->nullable();
+            $table->string('personal_image')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
