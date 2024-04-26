@@ -21,7 +21,6 @@ class SpecialistController extends Controller
         $data['specialists'] = Specialist::all();
         return view('dashboard.specialists.index', $data);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -38,18 +37,17 @@ class SpecialistController extends Controller
      */
     public function store(SpecialistRequest $request)
     {
-        $files = [];
-        foreach ($request->personal_card as $image) {
-            $files[] = Helper::uploadImage($image, "specialists/");
-        }
-        $personal_image = Helper::uploadImage($request->personal_image, "specialists/");
         Specialist::create([
             "service_id" => $request->service_id,
             "user_id" => $request->user_id,
             "description" => $request->description,
             "num_of_experience" =>  $request->num_of_experience,
-            "personal_card" => json_encode($files),
-            'personal_image' => $personal_image,
+            'personal_card' => $request->has('personal_card') ?
+                json_encode(array_map(fn ($image) => Helper::uploadImage($image, "specialists/"), $request->personal_card)) :
+                null,
+            'personal_image' => $request->hasFile('personal_image') ?
+                Helper::uploadImage($request->file('personal_image'), "specialists/") :
+                null,
         ]);
 
         return  redirect()->route('specialists.index');

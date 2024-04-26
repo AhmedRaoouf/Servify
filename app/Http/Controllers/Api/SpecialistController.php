@@ -28,20 +28,15 @@ class SpecialistController extends Controller
      */
     public function store(SpecialistRequest $request)
     {
-        $personal_card = [];
-        foreach ($request->personal_card as $image) {
-            $personal_card[] = Helper::uploadImage($image, "services/");
-        }
         $token = $request->header('Authorization');
         $userAuth = UserAuthentication::where('token', $token)->first();
-        $personal_image = Helper::uploadImage($request->personal_image, "services/");
         $specialist = Specialist::create([
             "user_id" => $userAuth->user_id,
             "service_id" => $request->service_id,
             "description" => $request->description,
             "num_of_experience" =>  $request->num_of_experience,
-            "personal_card" => json_encode($personal_card),
-            "personal_image" => $personal_image,
+            "personal_card" => json_encode(array_map(fn ($image) => Helper::uploadImage($image, "specialists/"), $request->personal_card)),
+            "personal_image" => Helper::uploadImage($request->personal_image, "services/"),
         ]);
         return  helper::responseData(new SpecialistResource($specialist), 'Specialist Created Successfully');
     }
@@ -62,17 +57,15 @@ class SpecialistController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Specialist  $specialist)
+    public function update(Request $request, Specialist $specialist)
     {
-        $validator = Validator::make($request->all(),[
-            'description' => 'required|string|max:1500',
+        $validator = Validator::make($request->all(), [
+            'description' => 'required|string',
         ]);
         if ($validator->fails()) {
-            return helper::responseError($validator->errors()->all(),422);
+            return helper::responseError($validator->errors()->all(), 422);
         }
-        $specialist = $specialist->update([
-            'description'=>$request->description
-        ]);
+        $specialist->update(['description' => $request->description]);
         return helper::responseData(new SpecialistResource($specialist), 'Specialist Updated Successfully');
     }
 
