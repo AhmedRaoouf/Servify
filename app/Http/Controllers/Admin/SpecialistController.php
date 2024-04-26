@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SpecialistRequest;
+use App\Models\Role;
 use App\Models\Service;
 use App\Models\Specialist;
 use App\Models\User;
@@ -26,7 +27,8 @@ class SpecialistController extends Controller
      */
     public function create()
     {
-        $data['users'] = User::all(['id', 'name']);
+        $role = Role::where('name','user')->first();
+        $data['users'] = User::where('role_id',$role->id)->get();
         $data['services'] = Service::all();
         return view('dashboard.specialists.index', $data);
     }
