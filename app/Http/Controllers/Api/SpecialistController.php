@@ -76,25 +76,29 @@ class SpecialistController extends Controller
     {
     }
 
-    public function rating(Request $request, $specialist_id)
+    public function rating(Request $request, Specialist $specialist)
     {
         $validator = Validator::make($request->all(), [
-            'rating' => 'required|numeric',
-            'review' => 'required|text',
+            'rating' => 'required|numeric|min:1|max:5',
+            'review' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return helper::responseError($validator->errors()->all(), 422);
         }
+        if (!$specialist) {
+            return helper::responseError('Specialist not found', 404);
+        }
         $token = $request->header('Authorization');
         $userAuth = UserAuthentication::where('token', $token)->first();
         $rating = SpecialistReview::create([
             'user_id' =>  $userAuth->user_id,
-            'specialist_id' => $specialist_id,
+            'specialist_id' => $specialist->id,
             'rating' => $request->rating,
             'review' => $request->review,
         ]);
-
+        $average_rate = SpecialistReview::where('specialist_id', $specialist->id)->avg('rating');
+        $specialist->update(['average_rating' => round($average_rate)]);
         return helper::responseData(new RatingResource($rating), 'Specialist Rating');
     }
 }

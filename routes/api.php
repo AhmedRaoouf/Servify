@@ -55,6 +55,6 @@ Route::middleware(['lang'])->group(function () {
         Route::get('/services/{service}',[ServiceController::class,'showAll']);
         //Specialists
         Route::apiResource('specialist', SpecialistController::class);
-        Route::post('specialist/{specialist_id}/rating', [SpecialistController::class, 'rating']);
+        Route::post('specialist/{specialist}/rating', [SpecialistController::class, 'rating']);
     });
 });
