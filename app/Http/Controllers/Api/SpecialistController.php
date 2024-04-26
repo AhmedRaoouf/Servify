@@ -11,6 +11,7 @@ use App\Models\SpecialistReview;
 use App\Models\UserAuthentication;
 use App\Services\Service as helper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
 class SpecialistController extends Controller
@@ -30,12 +31,18 @@ class SpecialistController extends Controller
     {
         $token = $request->header('Authorization');
         $userAuth = UserAuthentication::where('token', $token)->first();
+        $personalCardFiles = [];
+        if ($request->hasFile('personal_card')) {
+            $personalCardFiles = array_map(function ($image) {
+                return Helper::uploadImage($image, "specialists/");
+            }, Arr::wrap($request->file('personal_card')));
+        }
         $specialist = Specialist::create([
             "user_id" => $userAuth->user_id,
             "service_id" => $request->service_id,
             "description" => $request->description,
             "num_of_experience" =>  $request->num_of_experience,
-            "personal_card" => json_encode(array_map(fn ($image) => Helper::uploadImage($image, "specialists/"), $request->personal_card)),
+            "personal_card" => json_encode($personalCardFiles),
             "personal_image" => Helper::uploadImage($request->personal_image, "services/"),
         ]);
         return  helper::responseData(new SpecialistResource($specialist), 'Specialist Created Successfully');
