@@ -108,4 +108,6 @@ class SpecialistController extends Controller
         $specialist->update(['average_rating' => round($average_rate)]);
         return helper::responseData(new RatingResource($rating), 'Specialist Rating');
     }
+
+    
 }

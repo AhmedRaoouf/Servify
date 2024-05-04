@@ -23,10 +23,17 @@ class Specialist extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+    public function location()
+    {
+        return $this->belongsTo(UserLocation::class,'user_id');
+    }
     public function service()
     {
         return $this->belongsTo(Service::class, 'service_id');
+    }
+    public function serviceDescription()
+    {
+        return $this->belongsTo(ServiceDescription::class, 'service_id');
     }
 
 }

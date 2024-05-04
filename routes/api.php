@@ -51,8 +51,11 @@ Route::middleware(['lang'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::patch('/profile/update', [ProfileController::class, 'update']);
         //Services
-        Route::get('/services', [ServiceController::class, "index"]);
-        Route::get('/services/{service}',[ServiceController::class,'showAll']);
+        Route::get('services', [ServiceController::class, "index"]);
+        Route::get('services/best-specialists', [ServiceController::class, 'fetchBestSpecialists']);
+        Route::get('services/filter-specialists', [ServiceController::class, 'filterSpecialists']);
+        Route::get('services/{service}',[ServiceController::class,'showAll']);
+
         //Specialists
         Route::apiResource('specialist', SpecialistController::class);
         Route::post('specialist/{specialist}/rating', [SpecialistController::class, 'rating']);
