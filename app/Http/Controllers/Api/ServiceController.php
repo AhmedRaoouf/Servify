@@ -52,7 +52,7 @@ class ServiceController extends Controller
         }
 
         // Filter by rating
-        if ($request->has('rating')) {
+        if ($request->input('rating')) {
             $query->where('average_rating', '>=', $request->input('rating'));
         }
 
