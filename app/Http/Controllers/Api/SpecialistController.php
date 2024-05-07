@@ -51,9 +51,8 @@ class SpecialistController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(String $id)
+    public function show(Specialist $specialist)
     {
-        $specialist = Specialist::where('service_id', $id)->first();
         if ($specialist) {
             return helper::responseData(new SpecialistResource($specialist), 'Specialist');
         } else {
@@ -109,5 +108,5 @@ class SpecialistController extends Controller
         return helper::responseData(new RatingResource($rating), 'Specialist Rating');
     }
 
-    
+
 }

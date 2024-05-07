@@ -21,7 +21,7 @@ class UserResource extends JsonResource
         $location = UserLocation::where( 'user_id', $this->id )->first();
         $auth = UserAuthentication::where( 'user_id', $this->id )->first();
         return [
-            // 'token' => $this->token,
+            'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,

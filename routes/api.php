@@ -29,7 +29,6 @@ Route::middleware(['lang'])->group(function () {
     //Login with provider like facebook or google
     Route::post('login/{provider}/callback/{uid}', [AuthController::class, "handleSocialLogin"]);
 
-
     Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
     Route::post('/verify-email/{code}', [AuthController::class, 'verify']);
 
@@ -41,7 +40,8 @@ Route::middleware(['lang'])->group(function () {
     //location
     Route::get('/countries', [LocationController::class, 'getCountries']);
     Route::get('/county/{country}/governorate', [LocationController::class, 'getGovernorates']);
-    
+
+    //Services
     Route::get('services', [ServiceController::class, "index"]);
     Route::get('services/best-specialists', [ServiceController::class, 'fetchBestSpecialists']);
     Route::get('services/filter-specialists', [ServiceController::class, 'filterSpecialists']);
