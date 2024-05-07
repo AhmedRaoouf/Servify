@@ -33,6 +33,10 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
+            return Service::responseError("Specialist Not Found", 404);
+        }
+
         return parent::render($request, $exception);
     }
 }
