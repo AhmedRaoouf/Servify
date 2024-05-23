@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('booking', function (Blueprint $table) {
+        Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('service_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('specialist_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->date('booking_date');
             $table->time('booking_time');
+            $table->text('description');
+            $table->enum('status',['upcoming','completed','canceled']);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('booking');
+        Schema::dropIfExists('bookings');
     }
 };

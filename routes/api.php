@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ForgetController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\ProfileController;
@@ -57,9 +58,13 @@ Route::middleware(['lang'])->group(function () {
         Route::patch('/profile/update', [ProfileController::class, 'update']);
         //Services
 
-
         //Specialists
         Route::apiResource('specialist', SpecialistController::class);
         Route::post('specialist/{specialist}/rating', [SpecialistController::class, 'rating']);
+
+        // Booking
+        Route::apiResource('bookings',BookingController::class);
+        Route::get('bookings/status/{status}', [BookingController::class, 'status']);
+
     });
 });

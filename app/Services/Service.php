@@ -43,12 +43,12 @@ class Service
         return response()->json($response);
     }
 
-    public static function responseMsg($msg)
+    public static function responseMsg($msg,$statusCode=200)
     {
         return response()->json([
             'status' => true,
             'msg' => $msg,
-        ]);
+        ],$statusCode);
     }
 
 }

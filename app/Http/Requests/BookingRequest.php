@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class SpecialistRequest extends FormRequest
+class BookingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,18 +23,15 @@ class SpecialistRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'user_id' => 'nullable|exists:users,id',
-            'service_id' => 'required|exists:services,id',
-            'average_rating' => 'nullable|numeric|min:0|max:5',
-            'description' => 'required|string',
-            'num_of_experience' => 'nullable|integer|min:0',
-            'num_of_customers' => 'nullable|integer|min:0',
-            'earning' => 'nullable|integer|min:0',
-            'personal_card' => 'required',
-            'personal_card.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-            'personal_image' => 'nullable|image',
+        $rules = [
+            'user_id' => 'required|exists:users,id',
+            'specialist_id' => 'required|exists:specialists,id',
+            'booking_date' => 'required|date',
+            'booking_time' => 'required|date_format:H:i',
+            'description' => 'nullable|string|max:255',
+            'status' => 'required|string|in:upcoming,completed,canceled',
         ];
+        return $rules;
     }
 
     protected function failedValidation(Validator $validator)

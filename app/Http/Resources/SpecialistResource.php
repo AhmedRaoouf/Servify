@@ -17,7 +17,7 @@ class SpecialistResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $reviews = SpecialistReview::where('specialist_id', $this->user_id)->get();
+        $reviews = SpecialistReview::where('specialist_id', $this->id)->get();
         return [
             'service_name' => $this->service->description() ? $this->service->description()->name : null,
             'specialist_info' => [
