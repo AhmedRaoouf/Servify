@@ -18,7 +18,8 @@ return new class extends Migration
             $table->date('booking_date');
             $table->time('booking_time');
             $table->text('description');
-            $table->enum('status',['upcoming','completed','canceled']);
+            $table->decimal('price');
+            $table->enum('status',['waitting','upcoming','completed','canceled'])->default('waitting');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -16,6 +16,7 @@ class Booking extends Model
         'booking_time',
         'description',
         'status',
+        'price',
     ];
 
     // Define relationships if needed

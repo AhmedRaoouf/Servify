@@ -16,16 +16,15 @@ class BookingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $user = User::where('user_id',$this->user_id)->first();
-        $specialist = Specialist::where('specialist_id',$this->specialist_id)->first();
+        $user = User::where('id',$this->user_id)->first();
+        $specialist = Specialist::where('id',$this->specialist_id)->first();
         return [
             'id' => $this->id,
-            'user' => new UserResource($user),
-            'specialist' => new SpecialistResource($specialist),
             'description' => $this->description,
             'status' => $this->status,
             'booking_date' => $this->booking_date,
             'booking_time' => $this->booking_time,
+            'specialist' => new SpecialistCardResource($specialist),
         ];
     }
 }

@@ -64,6 +64,7 @@ Route::middleware(['lang'])->group(function () {
 
         // Booking
         Route::apiResource('bookings',BookingController::class);
+        Route::post('bookings/{booking}/cancel', [BookingController::class, 'cancel']);
         Route::get('bookings/status/{status}', [BookingController::class, 'status']);
 
     });

@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
+use App\Models\BookingCancel;
+use App\Models\User;
 use App\Services\Service;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
@@ -15,16 +17,6 @@ class BookingController extends Controller
     /**
      * Display a listing of the resource with pagination (6 per page).
      */
-    public function index()
-    {
-        $bookings = Booking::paginate(6);
-
-        if ($bookings->isEmpty()) {
-            return Service::responseMsg('No bookings available.');
-        }
-
-        return Service::responseData(BookingResource::collection($bookings), 'Bookings retrieved successfully.');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -32,20 +24,21 @@ class BookingController extends Controller
     public function store(BookingRequest $request) // Type-hint BookingRequest
     {
         $newBooking = Booking::create($request->validated());
-        return Service::responseData(new BookingResource($newBooking), 'New booking added successfully');
+        return Service::responseMsg("New booking added successfully");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Booking $booking)
+    public function show(Request $request, $id)
     {
-        dd($booking);
-        if ($booking->isEmpty()) {
+        $status = $request->input('status');
+        $booking = Booking::where('user_id', $id)->where('status', $status)->get();
+        if (!$booking) {
             return Service::responseError("Booking not found", 404);
         }
 
-        return Service::responseData(new BookingResource($booking), 'Booking');
+        return Service::responseData(BookingResource::collection($booking), 'Booking with status ' . $status);
     }
 
     /**
@@ -54,23 +47,46 @@ class BookingController extends Controller
     public function update(BookingRequest $request, Booking $booking)
     {
         $booking->update($request->validated());
-        return Service::responseData(new BookingResource($booking), 'Booking updated successfully');
+        return Service::responseMsg("New booking Updated successfully");
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function cancel(Request $request, $id)
     {
+        // Create a validator instance
+        $validator = Validator::make($request->all(), [
+            'reason' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        // Check if the validation fails
+        if ($validator->fails()) {
+            return Service::responseError($validator->errors(), 422);
+        }
+
+        // Find the booking by ID
         $booking = Booking::find($id);
 
         if (!$booking) {
-            return Service::responseError('Booking not found', 404);
+            return response()->json(['message' => 'Booking not found'], 404);
         }
 
-        $booking->delete();
-        return Service::responseMsg('Booking deleted successfully');
+        // Update the booking status to 'canceled'
+        $booking->status = 'canceled';
+        $booking->save();
+
+        // Create a new BookingCancel entry
+        $canceled = new BookingCancel();
+        $canceled->booking_id = $booking->id; 
+        $canceled->reason = $request->input('reason');
+        $canceled->description = $request->input('description');
+        $canceled->save();
+
+        return Service::responseMsg("Booking canceled successfully");
     }
+
 
     /**
      * Display a listing of bookings by status.
