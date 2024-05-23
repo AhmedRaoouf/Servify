@@ -34,12 +34,14 @@ class BookingController extends Controller
     {
         $status = $request->input('status');
         $booking = Booking::where('user_id', $id)->where('status', $status)->get();
-        if (!$booking) {
+
+        if ($booking->isEmpty()) {
             return Service::responseError("Booking not found", 404);
         }
 
         return Service::responseData(BookingResource::collection($booking), 'Booking with status ' . $status);
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -79,7 +81,7 @@ class BookingController extends Controller
 
         // Create a new BookingCancel entry
         $canceled = new BookingCancel();
-        $canceled->booking_id = $booking->id; 
+        $canceled->booking_id = $booking->id;
         $canceled->reason = $request->input('reason');
         $canceled->description = $request->input('description');
         $canceled->save();
