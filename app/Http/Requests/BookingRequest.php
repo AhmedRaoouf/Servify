@@ -29,7 +29,6 @@ class BookingRequest extends FormRequest
             'booking_date' => 'required|date',
             'booking_time' => 'required|date_format:H:i',
             'description' => 'nullable|string|max:255',
-            'status' => 'required|string|in:upcoming,completed,canceled',
             'price' => 'required|numeric|min:0',
         ];
         return $rules;
