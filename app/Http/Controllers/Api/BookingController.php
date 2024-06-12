@@ -8,8 +8,10 @@ use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\BookingCancel;
 use App\Models\User;
+use App\Notifications\BookingNotification;
 use App\Services\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
@@ -25,6 +27,9 @@ class BookingController extends Controller
     {
         $newBooking = Booking::create($request->validated());
         return Service::responseMsg("New booking added successfully");
+
+        $specialist = User::where('id',$newBooking->user_id)->first();
+        Notification::send($specialist , new BookingNotification($newBooking));
     }
 
     /**
@@ -36,7 +41,7 @@ class BookingController extends Controller
         $booking = Booking::where('user_id', $id)->where('status', $status)->get();
 
         if ($booking->isEmpty()) {
-            return Service::responseError("Booking not found", 404);
+            return Service::responseMsg("Booking not found");
         }
 
         return Service::responseData(BookingResource::collection($booking), 'Booking with status ' . $status);

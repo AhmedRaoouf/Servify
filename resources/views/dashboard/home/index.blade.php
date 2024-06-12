@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.container')
 @section('content')
 @section('title')
-    {{__('admin.dashboard')}}
+{{__('admin.dashboard') }}
 @endsection
 @section('body-content')
     <div class="container-fluid py-4">
@@ -113,7 +113,7 @@
                         <h6 class="text-capitalize">Sales overview</h6>
                         <p class="text-sm mb-0">
                             <i class="fa fa-arrow-up text-success"></i>
-                            <span class="font-weight-bold">4% more</span> in 2021
+                            <span class="font-weight-bold">4% more</span> in 2024
                         </p>
                     </div>
                     <div class="card-body p-3">
@@ -129,7 +129,7 @@
                         <div class="carousel-inner border-radius-lg h-100">
                             <div class="carousel-item h-100 active"
                                 style="background-image: url('{{ url('') }}/admin/img/carousel-1.jpg');
-    background-size: cover;">
+                                background-size: cover;">
                                 <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
                                     <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
                                         <i class="ni ni-camera-compact text-dark opacity-10"></i>
@@ -140,7 +140,7 @@
                             </div>
                             <div class="carousel-item h-100"
                                 style="background-image: url('{{ url('') }}/admin/img/carousel-2.jpg');
-    background-size: cover;">
+                                background-size: cover;">
                                 <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
                                     <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
                                         <i class="ni ni-bulb-61 text-dark opacity-10"></i>
@@ -152,7 +152,7 @@
                             </div>
                             <div class="carousel-item h-100"
                                 style="background-image: url('{{ url('') }}/admin/img/carousel-3.jpg');
-    background-size: cover;">
+                                background-size: cover;">
                                 <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
                                     <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
                                         <i class="ni ni-trophy text-dark opacity-10"></i>
