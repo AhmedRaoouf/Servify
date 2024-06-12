@@ -48,6 +48,8 @@ Route::middleware(['lang'])->group(function () {
     Route::get('services/filter-specialists', [ServiceController::class, 'filterSpecialists']);
     Route::get('services/{service}',[ServiceController::class,'showAll']);
 
+    Route::get('/profile', [ProfileController::class, 'show']);
+
     Route::middleware(['api_auth', 'api_authVerify'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         // Users
@@ -55,7 +57,6 @@ Route::middleware(['lang'])->group(function () {
         Route::post('user/password/update', [UserController::class, 'updatePassword']);
         Route::get('user/{user}',[UserController::class,'showUserData']);
         //profile
-        Route::get('/profile', [ProfileController::class, 'show']);
         Route::patch('/profile/update', [ProfileController::class, 'update']);
         //Services
 
