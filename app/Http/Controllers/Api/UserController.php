@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\UserAuthentication;
 use App\Services\Service;
@@ -53,6 +55,16 @@ class UserController extends Controller
         } else {
             return  Service::responseError("The old password is incorrect.", 401);
         }
+    }
+
+    public function showUserData(User $user)
+    {
+        return Service::responseData( [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'image' => $user->image ? asset('uploads') . "/$user->image" : 'Not Found',
+        ],'user data');
     }
 
 }

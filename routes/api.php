@@ -53,6 +53,7 @@ Route::middleware(['lang'])->group(function () {
         // Users
         Route::post('user/image/update', [UserController::class, 'uploadImage']);
         Route::post('user/password/update', [UserController::class, 'updatePassword']);
+        Route::get('user/{user}',[UserController::class,'showUserData']);
         //profile
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::patch('/profile/update', [ProfileController::class, 'update']);

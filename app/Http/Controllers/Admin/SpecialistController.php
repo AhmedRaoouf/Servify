@@ -72,7 +72,6 @@ class SpecialistController extends Controller
         $data['service'] = Service::where('id', $specialist->service_id)->first();
         return view('dashboard.specialists.index', $data);
     }
-
     /**
      * Update the specified resource in storage.
      */
