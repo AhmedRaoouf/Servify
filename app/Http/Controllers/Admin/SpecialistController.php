@@ -10,6 +10,7 @@ use App\Models\Specialist;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\Service as Helper;
+use Illuminate\Validation\Rule;
 
 class SpecialistController extends Controller
 {
@@ -82,10 +83,10 @@ class SpecialistController extends Controller
             'num_of_experience' => 'required|integer|min:0',
             'personal_card.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'personal_image' => 'nullable|image',
+            'status' =>  Rule::in(['true', 'false']),
         ]);
 
         $specialist = Specialist::findOrFail($id);
-
         $data = [
             'description' => $request->description,
             'num_of_experience' => $request->num_of_experience,
@@ -98,6 +99,7 @@ class SpecialistController extends Controller
         ];
 
         $specialist->update($data);
+        $specialist->user()->update(['is_specialist' => $request->status,]);
         return redirect()->route('specialists.index');
     }
 

@@ -29,6 +29,13 @@
                             <label>{{ __('admin.personalImage') }}</label>
                             <input type="file" name="personal_image" class="form-control form-control-user">
                         </div>
+                        <div class="form-group">
+                            <label>{{__('admin.status')}}</label>
+                            <select name="status" class="form-control">
+                                <option value="true">{{__('admin.true')}}</option>
+                                <option value="false">{{__('admin.false')}}</option>
+                            </select>
+                        </div>
                         <br>
                         <button type="submit" class="btn btn-primary">{{ __('admin.confirm') }}</button>
                         <a href="{{ route('specialists.index') }}" class="btn btn-danger">{{ __('admin.cancel') }}</a>
