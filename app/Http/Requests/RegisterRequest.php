@@ -22,7 +22,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         $rules =  [
-            'name' => ['required', 'string','min:3', 'max:255', 'regex:/^[A-Za-z0-9_ ]+$/',],
+            'name' => ['required', 'string','min:3', 'max:255','regex:/^[A-Za-z0-9_ \p{Arabic}]+$/u',],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string','confirmed', 'min:8', 'max:50'],
             'image' => ['nullable', 'image', 'max:5120'],
