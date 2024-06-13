@@ -31,7 +31,7 @@ class SpecialistRequest extends FormRequest
             'num_of_experience' => 'nullable|integer|min:0',
             'num_of_customers' => 'nullable|integer|min:0',
             'earning' => 'nullable|integer|min:0',
-            'personal_card' => 'required',
+            'personal_card' => 'nullable',
             'personal_card.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'personal_image' => 'nullable|image',
         ];
