@@ -64,8 +64,8 @@ class UserController extends Controller
         return Service::responseData( [
             'id' => $user->id,
             'name' => $user->name,
-            'email' => $user->email,
             'image' => $user->image ? asset('uploads') . "/$user->image" : 'Not Found',
+            'type' => $user->is_specialist ? "specialist" : 'user' ,
         ],'user data');
     }
 
