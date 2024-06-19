@@ -19,7 +19,6 @@ class BookingResource extends JsonResource
         $specialist = Specialist::where('id',$this->specialist_id)->first();
         return [
             'id' => $this->id,
-            'user_id' => $specialist->user->id,
             'description' => $this->description,
             'status' => $this->status,
             'booking_date' => $this->booking_date,
