@@ -8,6 +8,7 @@ use App\Http\Resources\RatingResource;
 use App\Http\Resources\SpecialistResource;
 use App\Models\Specialist;
 use App\Models\SpecialistReview;
+use App\Models\User;
 use App\Models\UserAuthentication;
 use App\Services\Service as helper;
 use Illuminate\Http\Request;
@@ -45,6 +46,7 @@ class SpecialistController extends Controller
             "personal_card" => json_encode($personalCardFiles),
             "personal_image" => Helper::uploadImage($request->personal_image, "services/"),
         ]);
+        User::where('id',$userAuth->user_id)->update(['is_specialist'=>1]);
         return  helper::responseData(new SpecialistResource($specialist), 'Specialist Created Successfully');
     }
 

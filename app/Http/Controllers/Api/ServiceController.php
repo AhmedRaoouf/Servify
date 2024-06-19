@@ -21,6 +21,10 @@ class ServiceController extends Controller
         $services = Service::all();
         return helper::responseData(ServiceResource::collection($services), 'Services');
     }
+    public function store(Request $request)
+    {
+        
+    }
 
     public function fetchBestSpecialists()
     {

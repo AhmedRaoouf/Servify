@@ -44,6 +44,7 @@ Route::middleware(['lang'])->group(function () {
 
     //Services
     Route::get('services', [ServiceController::class, "index"]);
+    Route::post('services/add-service', [ServiceController::class, "store"]);
     Route::get('services/best-specialists', [ServiceController::class, 'fetchBestSpecialists']);
     Route::get('services/filter-specialists', [ServiceController::class, 'filterSpecialists']);
     Route::get('services/{service}',[ServiceController::class,'showAll']);

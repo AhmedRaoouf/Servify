@@ -16,6 +16,7 @@ class SpecialistCardResource extends JsonResource
     {
         return [
             'service_name' => $this->service->description() ? $this->service->description()->name : null,
+            'user_id' => $this->user->id,
             'specialist' => [
                 'id' => $this->id,
                 'name' => $this->user->name,

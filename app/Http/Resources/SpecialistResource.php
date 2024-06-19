@@ -20,6 +20,7 @@ class SpecialistResource extends JsonResource
         $reviews = SpecialistReview::where('specialist_id', $this->id)->get();
         return [
             'service_name' => $this->service->description() ? $this->service->description()->name : null,
+            'user_id' => $this->user->id,
             'specialist_info' => [
                 'id' => $this->id,
                 'name' => $this->user->name,
