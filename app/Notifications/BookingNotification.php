@@ -54,4 +54,12 @@ class BookingNotification extends Notification
             'user_create' => $this->booking->user_id,
         ];
     }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'booking_id' => $this->booking->id,
+            'user_create' => $this->booking->user_id,
+        ]);
+    }
 }

@@ -132,9 +132,6 @@ class AuthController extends Controller
                 }
 
                 $userAuth = UserAuthentication::create($userAuthData);
-
-
-
                 return service::responseData(new UserResource($newuser), 'You are successfully registered');
             }
         } catch (UserNotFound $e) {
