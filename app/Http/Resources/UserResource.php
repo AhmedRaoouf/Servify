@@ -28,10 +28,10 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'role' => Role::where('id', $this->role_id)->value('name'),
+            'is_specialist' => $this->is_specialist ? true : false,
             'image' => $this->image ? asset('uploads') . "/$this->image" : 'Not Found',
             'user_auth' => new UserAuthResource( $auth ),
             'user_location' => new UserLocationResource( $location ),
-            'is_specialist' => $this->is_specialist ? true : false,
         ];
     }
 }
