@@ -21,14 +21,13 @@ class UserResource extends JsonResource
     {
         $location = UserLocation::where( 'user_id', $this->id )->first();
         $auth = UserAuthentication::where( 'user_id', $this->id )->first();
-        $specialist = Specialist::where('user_id',$this->id)->first();
         return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
             'role' => Role::where('id', $this->role_id)->value('name'),
-            'is_specialist' => $this->is_specialist ? true : false,
+            'is_specialist' => $this->is_specialist,
             'image' => $this->image ? asset('uploads') . "/$this->image" : 'Not Found',
             'user_auth' => new UserAuthResource( $auth ),
             'user_location' => new UserLocationResource( $location ),
