@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Role;
+use App\Models\Specialist;
 use App\Models\UserAuthentication;
 use App\Models\UserLocation;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class UserResource extends JsonResource
     {
         $location = UserLocation::where( 'user_id', $this->id )->first();
         $auth = UserAuthentication::where( 'user_id', $this->id )->first();
+        $specialist = Specialist::where('user_id',$this->id)->first();
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -29,6 +31,7 @@ class UserResource extends JsonResource
             'image' => $this->image ? asset('uploads') . "/$this->image" : 'Not Found',
             'user_auth' => new UserAuthResource( $auth ),
             'user_location' => new UserLocationResource( $location ),
+            'is_specialist' => $this->is_specialist ? true : false,
         ];
     }
 }
