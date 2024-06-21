@@ -117,13 +117,21 @@ class SpecialistController extends Controller
 
     public function acceptOrder(Order $order)
     {
-        $order->update(['status' => 'accepted']);
+        if ($order) {
+            $order->update(['status' => 'accept']);
+        }else {
+            return helper::responseError('Order Not Found',404);
+        }
         return helper::responseMsg('Order Accepted Successfully');
     }
 
     public function cancelOrder(Order $order)
     {
-        $order->update(['status' => 'canceled']);
+        if ($order) {
+            $order->update(['status' => 'cancel']);
+        }else {
+            return helper::responseError('Order Not Found',404);
+        }
         return helper::responseMsg('Order Canceled Successfully');
     }
 }
