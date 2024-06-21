@@ -40,7 +40,7 @@ class SpecialistController extends Controller
             "personal_card" => json_encode($personalCardFiles),
             "personal_image" => Helper::uploadImage($request->personal_image, "services/"),
         ]);
-        User::where('id',$userAuth->user_id)->update(['is_specialist'=>1]);
+        User::where('id', $userAuth->user_id)->update(['is_specialist' => 1]);
         return  helper::responseData(new SpecialistResource($specialist), 'Specialist Created Successfully');
     }
 
@@ -98,26 +98,29 @@ class SpecialistController extends Controller
         return helper::responseData(new RatingResource($rating), 'Specialist Rating');
     }
 
-    public function requests(Request $request)
+    public function requests()
     {
-        $token = $request->header('Authorization');
-        $userAuth = UserAuthentication::where('token', $token)->first();
-
-        $specialist = Specialist::where('user_id',$userAuth->user_id);
+        $specialist = Specialist::where('user_id', auth()->id())->first();
+        if (!$specialist) {
+            return response()->json(['error' => 'Specialist not found'], 404);
+        }
         $requests = Order::where('specialist_id', $specialist->id)
-            ->where('status', ['pending'])
+            ->where('status', 'pending')
             ->get();
-        return  helper::responseData(new OrderResource($requests), 'Specialist Requests');
+
+        return helper::responseData(OrderResource::collection($requests), 'Specialist Requests');
     }
 
-    public function acceptOrder(Order $order){
+
+    public function acceptOrder(Order $order)
+    {
         $order->update(['status' => 'accepted']);
         return helper::responseMsg('Order Accepted Successfully');
     }
 
-    public function cancelOrder(Order $order){
+    public function cancelOrder(Order $order)
+    {
         $order->update(['status' => 'canceled']);
         return helper::responseMsg('Order Canceled Successfully');
     }
-
 }
