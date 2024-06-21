@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SpecialistRequest;
+use App\Http\Resources\OrderResource;
 use App\Http\Resources\RatingResource;
 use App\Http\Resources\SpecialistResource;
+use App\Models\Order;
 use App\Models\Specialist;
 use App\Models\SpecialistReview;
 use App\Models\User;
@@ -17,14 +19,6 @@ use Illuminate\Support\Facades\Validator;
 
 class SpecialistController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -77,12 +71,6 @@ class SpecialistController extends Controller
         return helper::responseData(new SpecialistResource($specialist), 'Specialist Updated Successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-    }
 
     public function rating(Request $request, Specialist $specialist)
     {
@@ -110,5 +98,23 @@ class SpecialistController extends Controller
         return helper::responseData(new RatingResource($rating), 'Specialist Rating');
     }
 
+    public function requests()
+    {
+        $specialist = Specialist::where('user_id',auth()->id());
+        $requests = Order::where('specialist_id', $specialist->id)
+            ->where('status', ['pending'])
+            ->get();
+        return  helper::responseData(new OrderResource($requests), 'Specialist Requests');
+    }
+
+    public function acceptOrder(Order $order){
+        $order->update(['status' => 'accepted']);
+        return helper::responseMsg('Order Accepted Successfully');
+    }
+
+    public function cancelOrder(Order $order){
+        $order->update(['status' => 'canceled']);
+        return helper::responseMsg('Order Canceled Successfully');
+    }
 
 }

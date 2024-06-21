@@ -62,13 +62,17 @@ Route::middleware(['lang'])->group(function () {
         //Services
 
         //Specialists
-        Route::apiResource('specialist', SpecialistController::class);
-        Route::post('specialist/{specialist}/rating', [SpecialistController::class, 'rating']);
+        Route::prefix('specialists')->group(function () {
+        Route::apiResource('/', SpecialistController::class);
+        Route::post('{specialist}/rating', [SpecialistController::class, 'rating']);
+        Route::get('requests', [SpecialistController::class, 'requests']);
+        Route::post('orders/{order}/accept', [SpecialistController::class, 'acceptOrder']);
+        Route::post('orders/{order}/cancel', [SpecialistController::class, 'cancelOrder']);
+        });
 
         // Booking
         Route::apiResource('bookings',BookingController::class);
         Route::post('bookings/{booking}/cancel', [BookingController::class, 'cancel']);
         Route::get('bookings/status/{status}', [BookingController::class, 'status']);
-
     });
 });
