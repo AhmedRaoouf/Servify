@@ -62,8 +62,8 @@ Route::middleware(['lang'])->group(function () {
         //Services
 
         //Specialists
+        Route::apiResource('/specialist', SpecialistController::class);
         Route::prefix('specialist')->group(function () {
-        Route::apiResource('/', SpecialistController::class);
         Route::post('{specialist}/rating', [SpecialistController::class, 'rating']);
         Route::get('requests', [SpecialistController::class, 'requests']);
         Route::post('orders/{order}/accept', [SpecialistController::class, 'acceptOrder']);
