@@ -2,18 +2,22 @@
 
 namespace App\Notifications;
 
+use App\Events\BookingEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class BookingNotification extends Notification
+class BookingNotification extends Notification implements ShouldQueue
 {
     use Queueable;
+
     private $booking;
+
     /**
      * Create a new notification instance.
+     *
+     * @param $booking
      */
     public function __construct($booking)
     {
@@ -23,43 +27,36 @@ class BookingNotification extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @return array<int, string>
+     * @param mixed $notifiable
+     * @return array
      */
-    public function via(object $notifiable): array
+    public function via($notifiable)
     {
-        return ['database', 'broadcast','mail'];
+        return ['broadcast'];
     }
 
     /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
-    {
-        return (new MailMessage)
-            ->line('New Booking Created')
-            ->action('View Booking', url('/bookings/' . $this->booking->id))
-            ->line('Thank you for using our application!');
-    }
-
-
-    /**
-     * Get the array representation of the notification.
+     * Get the broadcast representation of the notification.
      *
-     * @return array<string, mixed>
+     * @param mixed $notifiable
+     * @return BroadcastMessage
      */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            'booking_id' => $this->booking->id,
-            'user_create' => $this->booking->user_id,
-        ];
-    }
-
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
             'booking_id' => $this->booking->id,
-            'user_create' => $this->booking->user_id,
+            'user_id' => $this->booking->user_id,
         ]);
+    }
+
+    /**
+     * Send the notification by broadcasting the event.
+     *
+     * @param mixed $notifiable
+     * @return void
+     */
+    public function send($notifiable)
+    {
+        event(new BookingEvent($this->booking));
     }
 }
