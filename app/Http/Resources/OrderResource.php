@@ -18,7 +18,7 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'username' => $this->user->name,
-            'image' => $this->user->image ? asset('uploads') . "/$this->user->image" : 'Not Found',
+            'image' => $this->user->image ? asset('uploads') . "/".$this->user->image : 'Not Found',
             'status' => $this->status,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
         ];
