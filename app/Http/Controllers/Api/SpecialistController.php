@@ -98,9 +98,12 @@ class SpecialistController extends Controller
         return helper::responseData(new RatingResource($rating), 'Specialist Rating');
     }
 
-    public function requests()
+    public function requests(Request $request)
     {
-        $specialist = Specialist::where('user_id',auth()->id());
+        $token = $request->header('Authorization');
+        $userAuth = UserAuthentication::where('token', $token)->first();
+
+        $specialist = Specialist::where('user_id',$userAuth->user_id);
         $requests = Order::where('specialist_id', $specialist->id)
             ->where('status', ['pending'])
             ->get();
