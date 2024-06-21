@@ -7,6 +7,7 @@ use App\Http\Requests\BookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\BookingCancel;
+use App\Models\Specialist;
 use App\Models\User;
 use App\Notifications\BookingNotification;
 use App\Services\Service;
@@ -23,14 +24,15 @@ class BookingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(BookingRequest $request) // Type-hint BookingRequest
+    public function store(BookingRequest $request)
     {
         $newBooking = Booking::create($request->validated());
-        return Service::responseMsg("New booking added successfully");
+        $user = User::find(Specialist::find($newBooking->specialist_id)->user_id);
+        $user->notify(new BookingNotification($newBooking));
 
-        $specialist = User::where('id',$newBooking->user_id)->first();
-        Notification::send($specialist , new BookingNotification($newBooking));
+        return Service::responseMsg("New booking added successfully");
     }
+
 
     /**
      * Display the specified resource.
