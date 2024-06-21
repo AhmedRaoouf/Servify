@@ -23,7 +23,7 @@ class ServiceController extends Controller
     }
     public function store(Request $request)
     {
-        
+
     }
 
     public function fetchBestSpecialists()
@@ -57,7 +57,7 @@ class ServiceController extends Controller
 
         // Filter by rating
         if ($request->input('rating')) {
-            $query->where('average_rating', '>=', $request->input('rating'));
+            $query->where('average_rating', "<=", $request->input('rating'));
         }
 
         $specialists = $query->get();
