@@ -32,8 +32,8 @@ class BookingController extends Controller
         $user = User::find($specialist->user_id);
         $user->notify(new BookingNotification($newBooking));
         Order::create([
-            'user_id' => $user->id,
-            'specialist_id' => $specialist->id,
+            'user_id' => $newBooking->user_id,
+            'specialist_id' => $newBooking->specialist_id,
         ]);
         return Service::responseMsg("New booking added successfully");
     }
