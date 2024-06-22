@@ -63,11 +63,11 @@ Route::middleware(['lang'])->group(function () {
 
         //Specialists
         Route::apiResource('/specialist', SpecialistController::class);
-        Route::prefix('specialist')->group(function () {
-        Route::post('{specialist}/rating', [SpecialistController::class, 'rating']);
-        Route::get('requests', [SpecialistController::class, 'requests']);
-        Route::post('orders/{order}/accept', [SpecialistController::class, 'acceptOrder']);
-        Route::post('orders/{order}/cancel', [SpecialistController::class, 'cancelOrder']);
+        // Route::get('/specialist/orders' , [SpecialistController::class, 'orders']);
+        Route::prefix('/specialist')->group(function () {
+            Route::post('{specialist}/rating', [SpecialistController::class, 'rating']);
+            Route::post('orders/{order}/accept', [SpecialistController::class, 'acceptOrder']);
+            Route::post('orders/{order}/cancel', [SpecialistController::class, 'cancelOrder']);
         });
 
         // Booking

@@ -19,6 +19,19 @@ use Illuminate\Support\Facades\Validator;
 
 class SpecialistController extends Controller
 {
+    public function index(Request $request){
+        $token = $request->header('Authorization');
+        $userAuth = UserAuthentication::where('token', $token)->first();
+        $specialist = Specialist::where('user_id', $userAuth->user_id)->first();
+        if (!$specialist) {
+            return response()->json(['error' => 'Specialist not found'], 404);
+        }
+        $requests = Order::where('specialist_id', $specialist->id)
+            ->where('status', 'pending')
+            ->get();
+
+        return helper::responseData(OrderResource::collection($requests), 'Specialist Requests');
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -98,20 +111,19 @@ class SpecialistController extends Controller
         return helper::responseData(new RatingResource($rating), 'Specialist Rating');
     }
 
-    public function requests(Request $request)
+    public function orders()
     {
-        $token = $request->header('Authorization');
-        $userAuth = UserAuthentication::where('token', $token)->first();
+        // $token = $request->header('Authorization');
+        // $userAuth = UserAuthentication::where('token', $token)->first();
+        // $specialist = Specialist::where('user_id', $userAuth->user_id)->first();
+        // if (!$specialist) {
+        //     return response()->json(['error' => 'Specialist not found'], 404);
+        // }
+        // $requests = Order::where('specialist_id', $specialist->id)
+        //     ->where('status', 'pending')
+        //     ->get();
 
-        $specialist = Specialist::where('user_id', $userAuth->user_id)->first();
-        if (!$specialist) {
-            return response()->json(['error' => 'Specialist not found'], 404);
-        }
-        $requests = Order::where('specialist_id', $specialist->id)
-            ->where('status', 'pending')
-            ->get();
-
-        return helper::responseData(OrderResource::collection($requests), 'Specialist Requests');
+        // return helper::responseData(OrderResource::collection($requests), 'Specialist Requests');
     }
 
 
